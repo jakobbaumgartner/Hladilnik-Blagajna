@@ -12,7 +12,7 @@ class App extends Component {
 
   constructor(props) {
       super(props);
-      this.state = {date: new Date(), page: 'inventorij'};
+      this.state = {date: new Date(), page: 'poraba'};
       this.changePage = this.changePage.bind(this);
 
   }
