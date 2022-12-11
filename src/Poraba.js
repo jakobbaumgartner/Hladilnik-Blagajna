@@ -91,7 +91,7 @@ export default class Poraba extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" >
+                    <Button variant="warning" >
                         Dodaj
                     </Button>
                 </Modal.Footer>
