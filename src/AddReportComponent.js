@@ -99,7 +99,7 @@ export default class AddReportComponent extends Component {
                                 <b>Skupaj: {this.state.newReport.Sum} € </b>
                             </Col>
                             <Col>
-                                <Button variant="success">Shrani</Button>
+                                <Button variant="success" onClick={this.props.dialogSave}>Shrani</Button>
                             </Col>
                         </Row>
                     </Container>

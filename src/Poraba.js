@@ -39,12 +39,13 @@ export default class Poraba extends Component {
                         },
                          selectedUser: 'Jakob Baumgarter', 
                          dialogAddChange: 0, 
-                         dialogAddArticle: 1 }
+                         dialogAddArticle: 0,
+                         dialogSaveReport: 1 }
 
         this.closeDialog = this.closeDialog.bind(this)
         this.opendialogAddChange = this.opendialogAddChange.bind(this)
         this.opendialogAddArticle = this.opendialogAddArticle.bind(this)
-        // this.removeArticle = this.removeArticle.bind(this)
+        this.openSaveDialog = this.openSaveDialog.bind(this)
 
     }
 
@@ -59,7 +60,11 @@ export default class Poraba extends Component {
 
 
     closeDialog() {
-        this.setState({ dialogAddChange: 0, dialogAddArticle: 0 });
+        this.setState({ dialogAddChange: 0, dialogAddArticle: 0, dialogSaveReport: 0 });
+    }
+
+    openSaveDialog() {
+        this.setState({ dialogSaveReport: 1})
     }
 
     render() {
@@ -126,11 +131,22 @@ export default class Poraba extends Component {
                     <Button variant="success">
                         Dodaj
                     </Button>
-
                 </Modal.Footer>
             </Modal>
 
         }
+        else if (this.state.dialogSaveReport) {
+            dialog = <Modal show="true">
+            <Modal.Header closeButton onClick={this.closeDialog}>
+                <Modal.Title>Shrani vnos</Modal.Title>
+            </Modal.Header>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
+                <Button variant="success">Potrdi</Button>
+            </Modal.Footer>
+        </Modal>
+        
+    }
         else {
             dialog = '';
         }
@@ -154,7 +170,7 @@ export default class Poraba extends Component {
                 </DropdownButton>
 
 
-                <AddReportComponent opendialogAddArticle={this.opendialogAddArticle} />
+                <AddReportComponent opendialogAddArticle={this.opendialogAddArticle} dialogSave={this.openSaveDialog}/>
 
             </div>
         )
