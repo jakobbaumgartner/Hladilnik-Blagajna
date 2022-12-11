@@ -74,3 +74,11 @@
   width: 90%;
   margin: auto;
 }
+
+.newlistArticle:hover {
+  border: 1px;
+  border-color: rgba(0, 0, 0, 0.175);
+  border-style: solid;
+  transition: 0.01s;
+  background-color: rgba(0, 0, 0, 0.03);
+}
