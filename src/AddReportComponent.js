@@ -75,7 +75,7 @@ export default class AddReportComponent extends Component {
 
         return (
 
-            <Card className="text-center" id="newReportCard" style={{ margin: 'auto', width: '90%', maxWidth: '1250px' }}>
+            <Card className="text-center" id="newReportCard">
                 <Card.Header as="h4">Poraba {this.state.newReport.Date.day}.{this.state.newReport.Date.month + 1}.{this.state.newReport.Date.year}</Card.Header>
                 <Card.Body>
                     <Container>

@@ -67,18 +67,42 @@
 #stanje {
   display: block;
   float: right;
+  margin-bottom: 5px;
 }
 
 #newReportCard {
   /* margin: 40px; */
+  /* width: 90%; */
+  /* max-width: 1000px;  */
+  /* margin-right: 200px; */
+  /* margin: auto; */
+
+}
+
+
+.newlistArticle:hover {
+  transition: 0.01s;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+#historyReport {
+  /* width: 90%; */
+  /* max-width: 1000px;  */
+  margin: auto;
+  margin-top: 30px;
+}
+
+#displayMainButtons {
   width: 90%;
   margin: auto;
 }
 
-.newlistArticle:hover {
-  border: 1px;
-  border-color: rgba(0, 0, 0, 0.175);
-  border-style: solid;
-  transition: 0.01s;
-  background-color: rgba(0, 0, 0, 0.03);
+#porabaDisplay {
+  display: block;
+  float: left;
+  width: 90%;
+  max-width: 1000px; 
+  margin: 5%;
+  margin-top: 20px;
+  /* margin: 50px; */
 }

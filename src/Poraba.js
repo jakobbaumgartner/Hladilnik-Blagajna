@@ -10,6 +10,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
+import HistoryReportsComponent from './HistoryReportsComponent.js'
 
 
 
@@ -19,28 +20,30 @@ export default class Poraba extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { users: ['Jakob Baumgartner', 'Aljaž Blažič', 'Miha Ožbot', 'Miloš Antič'],
-                        storage: {
-                            $4n5pxq24kriob12ogd: {
-                                name: 'Twix 50g',
-                                price: 0.8,
-                                number: 20
-                            },
-                            $4n5pxq24ksiob12ogl: {
-                                name: 'Bounty',
-                                price: 0.68,
-                                number: 15
-                            },
-                            $4n5pxq24krio242oab: {
-                                name: 'Radenska',
-                                price: 0.9,
-                                number: 4
-                            }
-                        },
-                         selectedUser: 'Jakob Baumgarter', 
-                         dialogAddChange: 0, 
-                         dialogAddArticle: 0,
-                         dialogSaveReport: 1 }
+        this.state = {
+            users: ['Jakob Baumgartner', 'Aljaž Blažič', 'Miha Ožbot', 'Miloš Antič'],
+            storage: {
+                $4n5pxq24kriob12ogd: {
+                    name: 'Twix 50g',
+                    price: 0.8,
+                    number: 20
+                },
+                $4n5pxq24ksiob12ogl: {
+                    name: 'Bounty',
+                    price: 0.68,
+                    number: 15
+                },
+                $4n5pxq24krio242oab: {
+                    name: 'Radenska',
+                    price: 0.9,
+                    number: 4
+                }
+            },
+            selectedUser: 'Jakob Baumgarter',
+            dialogAddChange: 0,
+            dialogAddArticle: 0,
+            dialogSaveReport: 1
+        }
 
         this.closeDialog = this.closeDialog.bind(this)
         this.opendialogAddChange = this.opendialogAddChange.bind(this)
@@ -64,7 +67,7 @@ export default class Poraba extends Component {
     }
 
     openSaveDialog() {
-        this.setState({ dialogSaveReport: 1})
+        this.setState({ dialogSaveReport: 1 })
     }
 
     render() {
@@ -104,9 +107,9 @@ export default class Poraba extends Component {
             for (const [key, value] of Object.entries(this.state.storage)) {
                 console.log(`${key}: ${value}`);
                 artikels.push(<option><p>{value.name}  ( {value.number} ) </p></option>)
-              }
+            }
 
-        
+
 
             dialog = <Modal show="true">
                 <Modal.Header closeButton onClick={this.closeDialog}>
@@ -117,7 +120,7 @@ export default class Poraba extends Component {
                         <InputGroup className="mb-3">
                             <InputGroup.Text>Artikel: </InputGroup.Text>
                             <Form.Select defaultValue="">
-                              {artikels}
+                                {artikels}
                             </Form.Select>
                         </InputGroup>
 
@@ -137,16 +140,16 @@ export default class Poraba extends Component {
         }
         else if (this.state.dialogSaveReport) {
             dialog = <Modal show="true">
-            <Modal.Header closeButton onClick={this.closeDialog}>
-                <Modal.Title>Shrani vnos</Modal.Title>
-            </Modal.Header>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
-                <Button variant="success">Potrdi</Button>
-            </Modal.Footer>
-        </Modal>
-        
-    }
+                <Modal.Header closeButton onClick={this.closeDialog}>
+                    <Modal.Title>Shrani vnos</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
+                    <Button variant="success">Potrdi</Button>
+                </Modal.Footer>
+            </Modal>
+
+        }
         else {
             dialog = '';
         }
@@ -155,22 +158,29 @@ export default class Poraba extends Component {
 
         return (
 
-            <div id="displayMainButtons">
+            <div style={{width: '100%'}}>
 
                 {dialog}
 
-                <ListGroup horizontal id="stanje">
-                    <ListGroup.Item><h5>Stanje</h5><br />15eur</ListGroup.Item>
-                </ListGroup>
+                <div id="displayMainButtons">
 
-                <Button variant="warning" id="polni" onClick={this.opendialogAddChange}>Polni</Button>
+                    <ListGroup horizontal id="stanje">
+                        <ListGroup.Item><h5>Stanje</h5><br />15eur</ListGroup.Item>
+                    </ListGroup>
 
-                <DropdownButton variant="warning" id="dropdown-names-button" title={this.state.selectedUser}  >
-                    {listNames}
-                </DropdownButton>
+                    <Button variant="warning" id="polni" onClick={this.opendialogAddChange}>Polni</Button>
 
+                    <DropdownButton variant="warning" id="dropdown-names-button" title={this.state.selectedUser}  >
+                        {listNames}
+                    </DropdownButton>
 
-                <AddReportComponent opendialogAddArticle={this.opendialogAddArticle} dialogSave={this.openSaveDialog}/>
+                </div>
+
+                <div id="porabaDisplay">
+                    <AddReportComponent opendialogAddArticle={this.opendialogAddArticle} dialogSave={this.openSaveDialog} />
+
+                    <HistoryReportsComponent />
+                </div>
 
             </div>
         )
