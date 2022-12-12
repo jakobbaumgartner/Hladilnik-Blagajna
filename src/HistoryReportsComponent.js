@@ -134,7 +134,7 @@ export default class HistoryReportsComponent extends Component {
                         </Row>
                         {listNewArticles}
                         <Row>
-                          <Col><b>Skupaj: {value.Sum} €</b></Col>
+                          <Col><b>Vsota: -{value.Sum} €</b></Col>
                         </Row>
                     </Container>
           </Accordion.Body>
@@ -149,7 +149,7 @@ export default class HistoryReportsComponent extends Component {
             <Accordion.Body>
             <Container>
                           <Row>
-                            <Col><b>Polnitev: {value.Amount} €</b></Col>
+                            <Col><b>Polnitev: +{value.Amount} €</b></Col>
                           </Row>
                       </Container>
             </Accordion.Body>
@@ -163,7 +163,7 @@ export default class HistoryReportsComponent extends Component {
           <Accordion.Body>
           <Container>
                         <Row>
-                          <Col><b>Pripis: {value.Amount} €</b></Col>
+                          <Col><b>Pripis: +{value.Amount} €</b></Col>
                         </Row>
                     </Container>
           </Accordion.Body>
@@ -175,7 +175,7 @@ export default class HistoryReportsComponent extends Component {
 
     return (
 
-      <Accordion id="historyReport">
+      <Accordion id="historyReport" alwaysOpen>
         {HistoryReports}
 
       </Accordion>
