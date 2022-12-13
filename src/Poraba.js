@@ -42,7 +42,7 @@ export default class Poraba extends Component {
             selectedUser: 'Jakob Baumgarter',
             dialogAddChange: 0,
             dialogAddArticle: 0,
-            dialogSaveReport: 1
+            dialogSaveReport: 0
         }
 
         this.closeDialog = this.closeDialog.bind(this)
