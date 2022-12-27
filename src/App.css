@@ -42,13 +42,13 @@
 
 #counters {
   float: right;
-  margin-right: 5%;
+  margin-right: 0;
   margin-bottom: 10px; 
 }
 
 #addArticleButton {
   float: left;
-  margin-left: 5%;
+  margin-left: 0;
   margin-bottom: 10px; 
 }
 
@@ -93,6 +93,7 @@
 }
 
 #displayMainButtons {
+  display: block;
   width: 90%;
   margin: auto;
 }
@@ -151,4 +152,10 @@
   /* height: 25px; */
   /* border: 3px solid #73AD21; */
   /* border: 3px; */
+}
+
+#listOfArticles {
+  display: block;
+  float: left;
+  width: 100%;
 }

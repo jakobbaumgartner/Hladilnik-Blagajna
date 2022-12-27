@@ -5,10 +5,6 @@ import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Col, Container, Row } from 'react-bootstrap';
-import { getUsers, getRecords } from './firebase';
-
-
-
 
 
 

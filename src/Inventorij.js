@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
-
+import { getInventory } from './firebase';
 
 
 
@@ -21,7 +21,10 @@ export default class Inventorij extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { dialogNewArticle: 0, dialogAddArticles: 0, dialogRemoveArticle: 0 }
+        this.state = {
+            inventory: {},
+            dialogNewArticle: 0, dialogAddArticles: 0, dialogRemoveArticle: 0
+        }
         this.closeDialog = this.closeDialog.bind(this)
         this.openDialogNew = this.openDialogNew.bind(this)
         this.openDialogAdd = this.openDialogAdd.bind(this)
@@ -45,6 +48,20 @@ export default class Inventorij extends Component {
 
     removeArticle() {
         this.setState({ dialogRemoveArticle: 1 })
+    }
+
+    componentDidMount() {
+
+        getInventory().then((querySnapshot) => {
+
+            var inventory = {};
+
+            querySnapshot.forEach((doc) => {
+                inventory[doc.id] = doc.data()
+            });
+
+            this.setState({ inventory: inventory })
+        })
     }
 
     render() {
@@ -126,28 +143,40 @@ export default class Inventorij extends Component {
             var dialog = <></>
         }
 
+        var listItems = [];
+
+        for (const [k, v] of Object.entries(this.state.inventory)) {
+
+
+            listItems.push(
+                <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} addArticles={this.openDialogAdd} removeArticle={this.removeArticle} />
+            )
+        }
+
 
 
         return (
 
-            <div id="inventorij">
+            <div id="inventorij" style={{ width: '100%' }}>
 
                 {dialog}
 
-                <Button id="addArticleButton" variant="success" size="lg" onClick={this.openDialogNew}> Dodaj Artikel </Button>
+                <div id="displayMainButtons">
+
+                    <Button id="addArticleButton" variant="success" size="lg" onClick={this.openDialogNew}> Dodaj Artikel </Button>
 
 
-                <ListGroup horizontal id="counters">
-                    <ListGroup.Item><h5>Stanje</h5><br />15eur</ListGroup.Item>
-                    <ListGroup.Item><h5>Artikli</h5><br />15eur</ListGroup.Item>
-                    <ListGroup.Item><h5>Dolg</h5><br />15eur</ListGroup.Item>
-                    <ListGroup.Item><h5>Vsota</h5><br />15eur</ListGroup.Item>
-                </ListGroup>
+                    <ListGroup horizontal id="counters">
+                        <ListGroup.Item><h5>Stanje</h5><br />15eur</ListGroup.Item>
+                        <ListGroup.Item><h5>Artikli</h5><br />15eur</ListGroup.Item>
+                        <ListGroup.Item><h5>Dolg</h5><br />15eur</ListGroup.Item>
+                        <ListGroup.Item><h5>Vsota</h5><br />15eur</ListGroup.Item>
+                    </ListGroup>
+                </div>
 
                 <div id="listOfArticles">
 
-
-                    <ArticleComponent uniqid={'4n5pxq24kpiob12og9'} Name='Twix 50g' boughtPrice='0.59' addArticles={this.openDialogAdd} removeArticle={this.removeArticle} />
+                    {listItems}
 
                 </div>
             </div>

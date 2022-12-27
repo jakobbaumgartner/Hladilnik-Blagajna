@@ -79,7 +79,7 @@ class App extends Component {
 </div>
         
           <Tabs
-            id="controlled-tab-example"
+            id="controlled-tabs"
             activeKey={this.state.page}
             onSelect={(k) => this.setState({ page: k })}
             className="mb-3"

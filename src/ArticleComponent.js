@@ -19,7 +19,7 @@ export default class ArticleComponent extends Component {
 
     changeSlider (event) {
 
-        console.log(event.target.value)
+        // console.log(event.target.value)
         // var newBonus = event.target.value 
         this.setState({bonus: Math.round(event.target.value * this.props.boughtPrice) / 100,
                         boughtPrice: Math.round((Number(this.props.boughtPrice) + this.state.bonus)*100)/100})
@@ -32,11 +32,11 @@ export default class ArticleComponent extends Component {
 
         return(
             
-            <Card style={{margin: 'auto', width: '90%', maxWidth: '1000px'}}>
+            <Card style={{margin: 'auto', width: '90%', maxWidth: '1000px', marginBottom: '20px'}}>
             <Card.Header as="h4">{this.props.Name}</Card.Header>
             <Card.Body>
               <div className='articlePrice'>Cena: {this.props.boughtPrice} + {this.state.bonus} = {this.state.boughtPrice} €</div>
-             <Form.Range id={this.props.uniqid + '-range'} defaultValue="0" onChange={this.changeSlider}/>
+             <Form.Range id={this.props.uniqid + '-range'} defaultValue={this.props.overHead} onChange={this.changeSlider}/>
 
             </Card.Body>
             <Card.Body>

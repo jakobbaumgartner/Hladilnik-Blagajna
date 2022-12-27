@@ -48,6 +48,13 @@ const getUsers = async () => {
   return querySnapshot
 }
 
+const getInventory = async () => {
+
+  const querySnapshot = await getDocs(collection(db, "inventory",));
+
+  return querySnapshot
+}
+
 const getRecords = async (userid) => {
 
 
@@ -141,5 +148,6 @@ export {
   logInWithEmailAndPassword,
   logOut,
   getUsers,
-  getRecords
+  getRecords,
+  getInventory
 };
