@@ -38,7 +38,7 @@ export default class HistoryReportsComponent extends Component {
 
       listNewArticles = [];
 
-      console.log(value.Articles)
+      // console.log(value.Articles)
 
       for (const [k, v] of Object.entries(value.Articles)) {
    

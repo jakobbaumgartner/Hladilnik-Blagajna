@@ -24,7 +24,7 @@ class App extends Component {
   }
 
   changePage(page) {
-    console.log(page)
+    // console.log(page)
     this.setState({ page: page })
   }
 
@@ -42,18 +42,18 @@ class App extends Component {
   componentDidMount() {
 
     const user =  auth.onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        console.log("User logged in.")
-        console.log(user)
+      // if (user) {
+      //   // User is signed in.
+      //   console.log("User logged in.")
+      //   console.log(user)
         
-      } else {
+      // } else {
 
-        console.log("User logged out.")
-      }
+      //   console.log("User logged out.")
+      // }
     });
 
-    console.log("AAAAAAAAAA")
+    // console.log("AAAAAAAAAA")
 
   }
 

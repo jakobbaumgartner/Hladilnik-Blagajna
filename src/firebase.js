@@ -29,15 +29,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const logInWithEmailAndPassword = async (email, password) => {
-  try {
-    await signInWithEmailAndPassword(auth, email, password) //.then((a) => console.log(auth.currentUser));
 
-  } catch (err) {
-    console.log(email)
-    console.log(password)
-    console.error(err);
-    alert(err.message);
-  }
+    await signInWithEmailAndPassword(auth, email, password) //.then((a) => console.log(auth.currentUser));
 };
 
 const logOut = async () => {
@@ -61,7 +54,7 @@ const getRecords = async (userid) => {
   var records = {};
 
   if (userid == '') {
-    console.log('no user')
+    // console.log('no user')
     return records
   }
 
@@ -114,8 +107,8 @@ const getRecords = async (userid) => {
       listArtic = {};
 
       articles.forEach((doc) => {
-        console.log(doc.id)
-        console.log(doc.data())
+        // console.log(doc.id)
+        // console.log(doc.data())
         articles[doc.id] = doc.data()
 
         listArtic[doc.id] = doc.data()
@@ -125,7 +118,7 @@ const getRecords = async (userid) => {
       records[key].Articles = listArtic
 
 
-      console.log(listArtic)
+      // console.log(listArtic)
   }
 );
 
@@ -135,7 +128,7 @@ const getRecords = async (userid) => {
   
 
 
-  console.log(records)
+  // console.log(records)
 
   return records;
 }
