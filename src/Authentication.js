@@ -42,11 +42,11 @@ export default function Authentication(props) {
             }}>
               Pošlji
             </button>
-            <Button variant="danger" onClick={(e) => {
+            {/* <Button variant="danger" onClick={(e) => {
               e.preventDefault()
               logOut()
             }
-            }>Logout</Button>{' '}
+            }>Logout</Button>{' '} */}
             {/* <Button variant="success" onClick={(e) => {
               e.preventDefault()
               // console.log(auth.currentUser)

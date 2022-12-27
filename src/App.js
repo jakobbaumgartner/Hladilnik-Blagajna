@@ -60,14 +60,6 @@ class App extends Component {
 
   render() {
 
-    // !auth.currentUser
-
-    // auth.currentUser.then(
-
-
-      
-    // )
-
     if (!auth.currentUser) {
 
       return (

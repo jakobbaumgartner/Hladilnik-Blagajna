@@ -11,6 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
+import { getUsers, getRecords } from './firebase';
 
 
 
@@ -21,7 +22,7 @@ export default class Poraba extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: ['Jakob Baumgartner', 'Aljaž Blažič', 'Miha Ožbot', 'Miloš Antič'],
+            users: [],
             storage: {
                 $4n5pxq24kriob12ogd: {
                     name: 'Twix 50g',
@@ -39,7 +40,8 @@ export default class Poraba extends Component {
                     number: 4
                 }
             },
-            selectedUser: 'Jakob Baumgarter',
+            selectedUser: '',
+            userName: 'izberi uporabnika',
             dialogAddChange: 0,
             dialogAddArticle: 0,
             dialogSaveReport: 0
@@ -49,6 +51,7 @@ export default class Poraba extends Component {
         this.opendialogAddChange = this.opendialogAddChange.bind(this)
         this.opendialogAddArticle = this.opendialogAddArticle.bind(this)
         this.openSaveDialog = this.openSaveDialog.bind(this)
+        this.getUserData = this.getUserData.bind(this)
 
     }
 
@@ -58,7 +61,6 @@ export default class Poraba extends Component {
 
     opendialogAddArticle() {
         this.setState({ dialogAddArticle: 1 })
-        console.log("hts")
     }
 
 
@@ -70,11 +72,44 @@ export default class Poraba extends Component {
         this.setState({ dialogSaveReport: 1 })
     }
 
+    getUserData() {
+
+    }
+
+    selectUser(user) {
+        this.setState({selectedUser: user,
+                       credit: this.state.users[user].credit,
+                       userName: this.state.users[user].name
+                    })
+        console.log(user)
+    }
+
+    componentDidMount() {   
+        (getUsers().then((querySnapshot) => {
+            var users = {};
+
+            querySnapshot.forEach((doc) => {
+
+                var dat = doc.data()
+                users[doc.id] = doc.data();
+                this.setState({ credit: dat.credit })
+            });
+
+            this.setState({users: users})
+
+        }))
+
+    }
+
     render() {
 
-        const listNames = this.state.users.map((name) =>
-            <Dropdown.Item as="button">{name}</Dropdown.Item>
-        );
+        const listNames = [];
+
+        for (const [key, user] of Object.entries(this.state.users)) {
+            // console.log(`${key}: ${user}`);
+            listNames.push(<Dropdown.Item as="button" id={key} key={key} onClick={() => this.selectUser(key)}>{user.name}</Dropdown.Item>)
+          }
+        
 
         var dialog;
 
@@ -105,7 +140,7 @@ export default class Poraba extends Component {
             var artikels = [];
 
             for (const [key, value] of Object.entries(this.state.storage)) {
-                console.log(`${key}: ${value}`);
+                // console.log(`${key}: ${value}`);
                 artikels.push(<option><p>{value.name}  ( {value.number} ) </p></option>)
             }
 
@@ -158,19 +193,19 @@ export default class Poraba extends Component {
 
         return (
 
-            <div style={{width: '100%'}}>
+            <div style={{ width: '100%' }}>
 
                 {dialog}
 
                 <div id="displayMainButtons">
 
                     <ListGroup horizontal id="stanje">
-                        <ListGroup.Item><h5>Stanje</h5><br />15eur</ListGroup.Item>
+                        <ListGroup.Item><h5>Stanje</h5><br />{this.state.credit}</ListGroup.Item>
                     </ListGroup>
 
                     <Button variant="warning" id="polni" onClick={this.opendialogAddChange}>Polni</Button>
 
-                    <DropdownButton variant="warning" id="dropdown-names-button" title={this.state.selectedUser}  >
+                    <DropdownButton variant="warning" id="dropdown-names-button" title={this.state.userName}  >
                         {listNames}
                     </DropdownButton>
 
