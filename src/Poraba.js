@@ -40,6 +40,7 @@ export default class Poraba extends Component {
                     number: 4
                 }
             },
+            reports: {},
             selectedUser: '',
             userName: 'izberi uporabnika',
             dialogAddChange: 0,
@@ -51,7 +52,6 @@ export default class Poraba extends Component {
         this.opendialogAddChange = this.opendialogAddChange.bind(this)
         this.opendialogAddArticle = this.opendialogAddArticle.bind(this)
         this.openSaveDialog = this.openSaveDialog.bind(this)
-        this.getUserData = this.getUserData.bind(this)
 
     }
 
@@ -72,16 +72,21 @@ export default class Poraba extends Component {
         this.setState({ dialogSaveReport: 1 })
     }
 
-    getUserData() {
-
-    }
 
     selectUser(user) {
         this.setState({selectedUser: user,
                        credit: this.state.users[user].credit,
                        userName: this.state.users[user].name
                     })
-        console.log(user)
+
+        getRecords(user).then((records) => {
+
+            this.setState({reports: records})
+        
+            })
+            
+
+        // getRecords(user)
     }
 
     componentDidMount() {   
@@ -189,7 +194,7 @@ export default class Poraba extends Component {
             dialog = '';
         }
 
-
+      
 
         return (
 
@@ -214,7 +219,7 @@ export default class Poraba extends Component {
                 <div id="porabaDisplay">
                     <AddReportComponent opendialogAddArticle={this.opendialogAddArticle} dialogSave={this.openSaveDialog} />
 
-                    <HistoryReportsComponent />
+                    <HistoryReportsComponent userId={this.state.selectedUser} reports={this.state.reports}/>
                 </div>
 
             </div>

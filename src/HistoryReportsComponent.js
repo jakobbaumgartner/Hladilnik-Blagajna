@@ -5,6 +5,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Col, Container, Row } from 'react-bootstrap';
+import { getUsers, getRecords } from './firebase';
 
 
 
@@ -15,80 +16,6 @@ export default class HistoryReportsComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      reports: {
-        $6854jgfh: {
-          Sort: 'articles',
-          Date: {
-            day: 12,
-            month: 3,
-            year: 2022
-          },
-          Articles: {
-            $4n5pxq24kriob12ogd: {
-              name: 'Twix 50g',
-              price: 0.8,
-              number: 7
-            },
-            $4n5pxq24ksiob12ogl: {
-              name: 'Bounty',
-              price: 0.68,
-              number: 4
-            },
-            $4n5pxq24krio242oab: {
-              name: 'Radenska',
-              price: 0.9,
-              number: 2
-            }
-          },
-          Sum: 10.12
-        },
-        $6854jfdf:{
-          Sort: 'money',
-          Date: {
-            day: 8,
-            month: 4,
-            year: 2022
-          },
-          Amount: 25
-        },
-        $68gfjgfh: {
-          Sort: 'articles',
-          Date: {
-            day: 8,
-            month: 4,
-            year: 2022
-          },
-          Articles: {
-            $4n5pxq24kriob12ogd: {
-              name: 'Twix 50g',
-              price: 0.8,
-              number: 7
-            },
-            $4n5pxq24ksiob12ogl: {
-              name: 'Bounty',
-              price: 0.68,
-              number: 4
-            },
-            $4n5pxq24krio242oab: {
-              name: 'Radenska',
-              price: 0.9,
-              number: 2
-            }
-          },
-          Sum: 10.12
-        },
-        $685ajfdf:{
-          Sort: 'bonus',
-          Date: {
-            day: 1,
-            month: 1,
-            year: 2022
-          },
-          Amount: 13.4
-        },
-      }
-    }
   }
 
 
@@ -99,13 +26,19 @@ export default class HistoryReportsComponent extends Component {
     var HistoryReports = [];
     var listNewArticles = [];
 
-    for (const [key, value] of Object.entries(this.state.reports)) {
+    // console.log(this.props.reports)
+
+
+
+    for (const [key, value] of Object.entries(this.props.reports)) {
+
+      // console.log(value)
 
       if (value.Sort == 'articles') {
 
       listNewArticles = [];
 
-      // console.log(value.Articles)
+      console.log(value.Articles)
 
       for (const [k, v] of Object.entries(value.Articles)) {
    
@@ -115,8 +48,8 @@ export default class HistoryReportsComponent extends Component {
 
                 <Col>{v.name}</Col>
                 <Col>{v.price} €</Col>
-                <Col>{v.number}</Col>
-                <Col>{Math.round(v.price * v.number * 100) / 100} €</Col>
+                <Col>{v.amount}</Col>
+                <Col>{Math.round(v.price * v.amount * 100) / 100} €</Col>
             </Row>
         )
     }
@@ -134,7 +67,7 @@ export default class HistoryReportsComponent extends Component {
                         </Row>
                         {listNewArticles}
                         <Row>
-                          <Col><b>Vsota: -{value.Sum} €</b></Col>
+                          <Col><b>Vsota: - {value.Sum} €</b></Col>
                         </Row>
                     </Container>
           </Accordion.Body>
@@ -142,14 +75,14 @@ export default class HistoryReportsComponent extends Component {
       )
       }
 
-      if (value.Sort == 'money') {
+      if (value.Sort == 'credit') {
         HistoryReports.push(
           <Accordion.Item eventKey={key}>
             <Accordion.Header><h5>{value.Date.day}.{value.Date.month + 1}.{value.Date.year}</h5></Accordion.Header>
             <Accordion.Body>
             <Container>
                           <Row>
-                            <Col><b>Polnitev: +{value.Amount} €</b></Col>
+                            <Col><b>Polnitev: + {value.Sum} €</b></Col>
                           </Row>
                       </Container>
             </Accordion.Body>
@@ -163,7 +96,7 @@ export default class HistoryReportsComponent extends Component {
           <Accordion.Body>
           <Container>
                         <Row>
-                          <Col><b>Pripis: +{value.Amount} €</b></Col>
+                          <Col><b>Pripis: + {value.Sum} €</b></Col>
                         </Row>
                     </Container>
           </Accordion.Body>
@@ -179,7 +112,7 @@ export default class HistoryReportsComponent extends Component {
         {HistoryReports}
 
       </Accordion>
-
+   
     )
 
   }

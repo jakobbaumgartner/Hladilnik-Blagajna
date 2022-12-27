@@ -31,7 +31,7 @@ const auth = getAuth(app);
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password) //.then((a) => console.log(auth.currentUser));
-    
+
   } catch (err) {
     console.log(email)
     console.log(password)
@@ -41,7 +41,7 @@ const logInWithEmailAndPassword = async (email, password) => {
 };
 
 const logOut = async () => {
-  await signOut(auth).then(()=>console.log(auth.currentUser));
+  await signOut(auth).then(() => console.log(auth.currentUser));
 };
 
 
@@ -49,22 +49,95 @@ const logOut = async () => {
 const db = getFirestore(app);
 
 const getUsers = async () => {
+
   const querySnapshot = await getDocs(collection(db, "users",));
-  // console.log(querySnapshot)
-  // querySnapshot.forEach((doc) => {
-  //   console.log(doc.id);
-  //   console.log(doc.data())
-  // });
+
   return querySnapshot
 }
 
 const getRecords = async (userid) => {
+
+
+  var records = {};
+
+  if (userid == '') {
+    console.log('no user')
+    return records
+  }
+
   const querySnapshot = await getDocs(collection(db, "users", userid, "records"));
-  // console.log(querySnapshot)
-  // querySnapshot.forEach((doc) => {
-  //   console.log(doc.id);
-  //   console.log(doc.data())
-  // });
+
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id);
+    // console.log(doc.data())
+
+    var dateFormat = ((doc.data().date).toDate())
+
+    var articles = {};
+
+
+  //   (getUsers().then((querySnapshot) => {
+  //     var users = {};
+
+  //     querySnapshot.forEach((doc) => {
+
+  //         var dat = doc.data()
+  //         users[doc.id] = doc.data();
+  //         this.setState({ credit: dat.credit })
+  //     });
+
+  //     this.setState({users: users})
+
+  // }))
+
+    records[doc.id] = {
+      Articles: articles,
+      Sort: doc.data().type,
+      Date: {
+        day: dateFormat.getDate(),
+        month: (dateFormat.getMonth() + 1),
+        year: 2022
+      },
+      Sum: doc.data().amount
+    }
+
+  });
+
+
+  var listArtic = {};
+
+  for (const [key, value] of Object.entries(records)) {
+    // console.log(`${key}: ${value}`);
+
+    await getDocs(collection(db, "users",userid, "records", key, "articles")).then((articles) => {
+
+      listArtic = {};
+
+      articles.forEach((doc) => {
+        console.log(doc.id)
+        console.log(doc.data())
+        articles[doc.id] = doc.data()
+
+        listArtic[doc.id] = doc.data()
+  
+      })
+
+      records[key].Articles = listArtic
+
+
+      console.log(listArtic)
+  }
+);
+
+  }
+
+
+  
+
+
+  console.log(records)
+
+  return records;
 }
 
 
