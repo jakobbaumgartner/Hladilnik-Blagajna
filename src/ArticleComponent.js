@@ -44,6 +44,7 @@ export default class ArticleComponent extends Component {
             <Button style={{marginLeft: '10px'}} variant="danger" onClick={this.props.removeArticle}>Odstrani</Button>
 
             </Card.Body>
+            <Card.Footer as="h7">Na voljo: {this.props.number}</Card.Footer>
           </Card>
 
         )

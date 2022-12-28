@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { getInventory } from './firebase';
+import { getInventory, getRegisterData } from './firebase';
 
 
 
@@ -61,6 +61,15 @@ export default class Inventorij extends Component {
             });
 
             this.setState({ inventory: inventory })
+        })
+
+        getRegisterData().then((querySnapshot) => {
+            var data
+            // console.log(querySnapshot.data())
+            querySnapshot.forEach((doc) => {
+               data = doc.data();
+            });
+            this.setState({cash: data.cashRegister, articlesValue: data.articlesValue, debt: data.usersDebt})
         })
     }
 
@@ -147,9 +156,8 @@ export default class Inventorij extends Component {
 
         for (const [k, v] of Object.entries(this.state.inventory)) {
 
-
             listItems.push(
-                <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} addArticles={this.openDialogAdd} removeArticle={this.removeArticle} />
+                <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={this.removeArticle} />
             )
         }
 
@@ -167,10 +175,10 @@ export default class Inventorij extends Component {
 
 
                     <ListGroup horizontal id="counters">
-                        <ListGroup.Item><h5>Stanje</h5><br />15eur</ListGroup.Item>
-                        <ListGroup.Item><h5>Artikli</h5><br />15eur</ListGroup.Item>
-                        <ListGroup.Item><h5>Dolg</h5><br />15eur</ListGroup.Item>
-                        <ListGroup.Item><h5>Vsota</h5><br />15eur</ListGroup.Item>
+                        <ListGroup.Item><span title="Denar v blagajni."><h5>Blagajna</h5><br />{this.state.cash}</span></ListGroup.Item>
+                        <ListGroup.Item><span title="Prodajna vrednost artiklov v blagajni."><h5>Artikli</h5><br />{this.state.articlesValue}</span></ListGroup.Item>
+                        <ListGroup.Item><span title="Vrednost dolga uporabnikov."><h5>Dolg</h5><br />{this.state.debt}</span></ListGroup.Item>
+                        <ListGroup.Item><span title="Vsota = blagajna + artikli + dolg"><h5>Vsota</h5><br />{this.state.cash + this.state.articlesValue + this.state.debt}</span></ListGroup.Item>
                     </ListGroup>
                 </div>
 

@@ -30,7 +30,7 @@ const auth = getAuth(app);
 
 const logInWithEmailAndPassword = async (email, password) => {
 
-    await signInWithEmailAndPassword(auth, email, password) //.then((a) => console.log(auth.currentUser));
+  await signInWithEmailAndPassword(auth, email, password) //.then((a) => console.log(auth.currentUser));
 };
 
 const logOut = async () => {
@@ -75,21 +75,6 @@ const getRecords = async (userid) => {
 
     var articles = {};
 
-
-  //   (getUsers().then((querySnapshot) => {
-  //     var users = {};
-
-  //     querySnapshot.forEach((doc) => {
-
-  //         var dat = doc.data()
-  //         users[doc.id] = doc.data();
-  //         this.setState({ credit: dat.credit })
-  //     });
-
-  //     this.setState({users: users})
-
-  // }))
-
     records[doc.id] = {
       Articles: articles,
       Sort: doc.data().type,
@@ -109,7 +94,7 @@ const getRecords = async (userid) => {
   for (const [key, value] of Object.entries(records)) {
     // console.log(`${key}: ${value}`);
 
-    await getDocs(collection(db, "users",userid, "records", key, "articles")).then((articles) => {
+    await getDocs(collection(db, "users", userid, "records", key, "articles")).then((articles) => {
 
       listArtic = {};
 
@@ -119,25 +104,25 @@ const getRecords = async (userid) => {
         articles[doc.id] = doc.data()
 
         listArtic[doc.id] = doc.data()
-  
+
       })
 
       records[key].Articles = listArtic
 
-
-      // console.log(listArtic)
-  }
-);
+    }
+    );
 
   }
 
-
-  
-
-
-  // console.log(records)
 
   return records;
+}
+
+const getRegisterData = async () => {
+
+  const querySnapshot = await getDocs(collection(db, "register",));
+
+  return querySnapshot
 }
 
 
@@ -149,5 +134,6 @@ export {
   logOut,
   getUsers,
   getRecords,
-  getInventory
+  getInventory,
+  getRegisterData
 };
