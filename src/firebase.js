@@ -9,7 +9,10 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
+
+import uniqid from 'uniqid';
+
 
 
 // Your web app's Firebase configuration
@@ -125,6 +128,27 @@ const getRegisterData = async () => {
   return querySnapshot
 }
 
+const addArticleData = async (name, basePrice, number) => {
+
+  var postResponse = setDoc(doc(db, "inventory", uniqid('article-')), {
+    name: name,
+    basePrice: basePrice,
+    overHead: 0,
+    amount: number
+  });
+
+  return "sentData"
+
+}
+
+const removeArticleData = async (id) => {
+
+  await deleteDoc(doc(db, "inventory", id));
+
+
+
+}
+
 
 
 export {
@@ -135,5 +159,7 @@ export {
   getUsers,
   getRecords,
   getInventory,
-  getRegisterData
+  getRegisterData,
+  addArticleData,
+  removeArticleData
 };
