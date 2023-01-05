@@ -145,10 +145,13 @@ const removeArticleData = async (id) => {
 
   await deleteDoc(doc(db, "inventory", id));
 
-
-
 }
 
+const updateStockData = async (id, number, price) => {
+
+  await setDoc(doc(db, 'inventory', id), { amount: number, basePrice: price }, { merge: true });
+
+}
 
 
 export {
@@ -161,5 +164,6 @@ export {
   getInventory,
   getRegisterData,
   addArticleData,
-  removeArticleData
+  removeArticleData,
+  updateStockData
 };

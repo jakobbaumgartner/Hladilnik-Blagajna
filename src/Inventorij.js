@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { getInventory, getRegisterData, addArticleData, removeArticleData } from './firebase';
+import { getInventory, getRegisterData, addArticleData, removeArticleData, updateStockData } from './firebase';
 
 
 
@@ -32,6 +32,7 @@ export default class Inventorij extends Component {
         this.removeArticle = this.removeArticle.bind(this)
         this.addArticle = this.addArticle.bind(this)
         this.removeArticleDatabase = this.removeArticleDatabase.bind(this)
+        this.addStock = this.addStock.bind(this)
 
 
 
@@ -47,8 +48,8 @@ export default class Inventorij extends Component {
         this.setState({ dialogNewArticle: 1 })
     }
 
-    openDialogAdd() {
-        this.setState({ dialogAddArticles: 1 })
+    openDialogAdd(id) {
+        this.setState({ dialogAddArticles: 1, chosenArticle: id  })
     }
 
     removeArticle(id) {
@@ -63,8 +64,6 @@ export default class Inventorij extends Component {
         addArticleData(name, price, number).then((()=> {
 
                 getInventory().then((querySnapshot) => {
-
-                    console.log(querySnapshot)
     
                     var inventory = {};
         
@@ -120,6 +119,38 @@ export default class Inventorij extends Component {
         this.setState({dialogRemoveArticle: 0})
     }
 
+    addStock () {
+        var number = document.getElementById('addStockNumber').children[1].value;
+        var price = document.getElementById('addStockPrice').children[1].value;
+
+        var articleId = this.state.chosenArticle;
+
+        var article = this.state.inventory[articleId]
+
+        console.log(article)
+
+        var newNumber = Number(article.amount) + Number(number);
+        console.log(newNumber)
+        var price = (Number(article.amount) * Number(article.basePrice) + Number(number) * Number(price)) / (newNumber);
+        console.log(price)
+
+        updateStockData (articleId, newNumber, price).then((()=> {
+
+            getInventory().then((querySnapshot) => {
+
+                var inventory = {};
+    
+                querySnapshot.forEach((doc) => {
+                    inventory[doc.id] = doc.data()
+                });
+    
+                this.setState({ inventory: inventory })
+            })
+        }))
+        this.setState({dialogAddArticles: 0})
+    
+    }
+
     render() {
 
         if (this.state.dialogNewArticle) {
@@ -163,11 +194,11 @@ export default class Inventorij extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <InputGroup className="mb-3">
-                            <InputGroup.Text>Dodaj: </InputGroup.Text>
+                        <InputGroup className="mb-3" id="addStockNumber">
+                            <InputGroup.Text>Količina: </InputGroup.Text>
                             <Form.Control />
                         </InputGroup>
-                        <InputGroup className="mb-3">
+                        <InputGroup className="mb-3" id="addStockPrice">
                             <InputGroup.Text>Cena €:</InputGroup.Text>
                             <Form.Control />
                         </InputGroup>
@@ -175,7 +206,7 @@ export default class Inventorij extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="success" >
+                    <Button variant="success" onClick={this.addStock}>
                         Dodaj
                     </Button>
 

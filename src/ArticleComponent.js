@@ -40,11 +40,11 @@ export default class ArticleComponent extends Component {
 
             </Card.Body>
             <Card.Body>
-            <Button variant="success" onClick={this.props.addArticles}>Dodaj</Button>
+            <Button variant="success" onClick={() => this.props.addArticles(this.props.uniqid)}>Dodaj</Button>
             <Button style={{marginLeft: '10px'}} variant="danger" onClick={() => this.props.removeArticle(this.props.uniqid)}>Odstrani</Button>
 
             </Card.Body>
-            <Card.Footer as="h7">Na voljo: {this.props.number}</Card.Footer>
+            <Card.Footer>Na voljo: {this.props.number}</Card.Footer>
           </Card>
 
         )
