@@ -249,12 +249,15 @@ export default class Inventorij extends Component {
         }
 
         var listItems = [];
+        var vsotaArtiklov = 0;
 
         for (const [k, v] of Object.entries(this.state.inventory)) {
 
             listItems.push(
                 <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} changeSliderValue={(id, value) => {this.changeSliderValue(id, value)}}/>
             )
+
+            vsotaArtiklov = vsotaArtiklov + Number(v.amount) * (Number(v.basePrice) * (1 + Number(v.overHead)/100));
         }
 
 
@@ -271,10 +274,9 @@ export default class Inventorij extends Component {
 
 
                     <ListGroup horizontal id="counters">
-                        <ListGroup.Item><span title="Denar v blagajni."><h5>Blagajna</h5><br />{this.state.cash}</span></ListGroup.Item>
-                        <ListGroup.Item><span title="Prodajna vrednost artiklov v blagajni."><h5>Artikli</h5><br />{this.state.articlesValue}</span></ListGroup.Item>
-                        <ListGroup.Item><span title="Vrednost dolga uporabnikov."><h5>Dolg</h5><br />{this.state.debt}</span></ListGroup.Item>
-                        <ListGroup.Item><span title="Vsota = blagajna + artikli + dolg"><h5>Vsota</h5><br />{this.state.cash + this.state.articlesValue + this.state.debt}</span></ListGroup.Item>
+                        <ListGroup.Item><span title="Denar v blagajni."><h5>Blagajna</h5><br />{this.state.cash} €</span></ListGroup.Item>
+                        <ListGroup.Item><span title="Prodajna vrednost artiklov v blagajni."><h5>Artikli</h5><br />{parseFloat(vsotaArtiklov).toFixed(2)} €</span></ListGroup.Item>                        
+                        <ListGroup.Item><span title="Vsota = blagajna + artikli + dolg"><h5>Vsota</h5><br />{parseFloat(Number(this.state.cash) - vsotaArtiklov).toFixed(2) } €</span></ListGroup.Item>
                     </ListGroup>
                 </div>
 

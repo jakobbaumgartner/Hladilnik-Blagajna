@@ -114,6 +114,25 @@ export default class Poraba extends Component {
             // console.log(`${key}: ${user}`);
             listNames.push(<Dropdown.Item as="button" id={key} key={key} onClick={() => this.selectUser(key)}>{user.name}</Dropdown.Item>)
           }
+
+        var stanje = 0;  
+
+        for (const [k, v] of Object.entries(this.state.reports)) {
+
+            // listItems.push(
+            //     <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} changeSliderValue={(id, value) => {this.changeSliderValue(id, value)}}/>
+            // )
+
+            console.log(v)
+
+            if (v.Sort == "articles") {
+                stanje = stanje - v.Sum;
+            }
+            else if (v.Sort == "credit") {
+                stanje = stanje + v.Sum;
+            }
+
+        }
         
 
         var dialog;
@@ -205,7 +224,7 @@ export default class Poraba extends Component {
                 <div id="displayMainButtons">
 
                     <ListGroup horizontal id="stanje">
-                        <ListGroup.Item><h5>Stanje</h5><br />{this.state.credit}</ListGroup.Item>
+                        <ListGroup.Item><h5>Stanje</h5><br />{stanje}</ListGroup.Item>
                     </ListGroup>
 
                     <Button variant="warning" id="polni" onClick={this.opendialogAddChange}>Polni</Button>
