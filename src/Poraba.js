@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
-import { getUsers, getRecords } from './firebase';
+import { getUsers, getRecords, getInventory } from './firebase';
 
 
 
@@ -20,6 +20,7 @@ import { getUsers, getRecords } from './firebase';
 export default class Poraba extends Component {
 
     constructor(props) {
+        const d = new Date();
         super(props);
         this.state = {
             users: [],
@@ -40,11 +41,38 @@ export default class Poraba extends Component {
                     number: 4
                 }
             },
+            newReport: {
+                Date: {
+                    day: d.getDate(),
+                    month: d.getMonth(),
+                    year: d.getFullYear()
+                },
+                Articles: {
+                    $4n5pxq24kriob12ogd: {
+                        name: 'Twix 50g',
+                        price: 0.8,
+                        number: 7
+                    },
+                    $4n5pxq24ksiob12ogl: {
+                        name: 'Bounty',
+                        price: 0.68,
+                        number: 4
+                    },
+                    $4n5pxq24krio242oab: {
+                        name: 'Radenska',
+                        price: 0.9,
+                        number: 2
+                    }
+                },
+                Sum: 10.12
+            },
             reports: {},
             selectedUser: '',
+            selectedArticle: '',
             userName: 'izberi uporabnika',
             dialogAddChange: 0,
             dialogAddArticle: 0,
+            dialogRemoveArticle: 0,
             dialogSaveReport: 0
         }
 
@@ -52,6 +80,13 @@ export default class Poraba extends Component {
         this.opendialogAddChange = this.opendialogAddChange.bind(this)
         this.opendialogAddArticle = this.opendialogAddArticle.bind(this)
         this.openSaveDialog = this.openSaveDialog.bind(this)
+        this.openDialogRemoveArticle = this.openDialogRemoveArticle.bind(this)
+        this.removeArticle = this.removeArticle.bind(this)
+        this.getStorage = this.getStorage.bind(this)
+        this.getUsersData = this.getUsersData.bind(this)
+
+
+
 
     }
 
@@ -65,11 +100,27 @@ export default class Poraba extends Component {
 
 
     closeDialog() {
-        this.setState({ dialogAddChange: 0, dialogAddArticle: 0, dialogSaveReport: 0 });
+        this.setState({ dialogAddChange: 0, dialogAddArticle: 0, dialogRemoveArticle: 0, dialogSaveReport: 0 });
     }
 
     openSaveDialog() {
         this.setState({ dialogSaveReport: 1 })
+    }
+
+    openDialogRemoveArticle(id) {
+        console.log(id)
+        this.setState({selectedArticle: id})
+        this.setState({dialogRemoveArticle: 1})
+    }
+
+    removeArticle () {
+
+        var report = this.state.newReport;
+
+        delete report.Articles[this.state.selectedArticle]
+
+        this.closeDialog()
+
     }
 
 
@@ -85,12 +136,37 @@ export default class Poraba extends Component {
         
             })
             
-
-        // getRecords(user)
     }
 
-    componentDidMount() {   
-        (getUsers().then((querySnapshot) => {
+    getStorage () {
+        getInventory().then((querySnapshot) => {
+
+            var inventory = {};
+
+            querySnapshot.forEach((doc) => {
+                inventory[doc.id] = doc.data()
+            });
+
+            this.setState({ storage: inventory })
+
+            console.log(inventory)
+        })
+
+
+    }
+
+    addArticle () {
+        var name = document.getElementById('addArtikelName').children
+        var number = document.getElementById('addArtikelNumber')
+        console.log(name)
+    }
+
+    selectArticle(id) {
+        console.log(id)
+    }
+
+    getUsersData() {
+        getUsers().then((querySnapshot) => {
             var users = {};
 
             querySnapshot.forEach((doc) => {
@@ -102,11 +178,17 @@ export default class Poraba extends Component {
 
             this.setState({users: users})
 
-        }))
+        })
+    }
+
+    componentDidMount() {   
 
     }
 
     render() {
+
+        this.getStorage()
+
 
         const listNames = [];
 
@@ -165,7 +247,7 @@ export default class Poraba extends Component {
 
             for (const [key, value] of Object.entries(this.state.storage)) {
                 // console.log(`${key}: ${value}`);
-                artikels.push(<option><p>{value.name}  ( {value.number} ) </p></option>)
+                artikels.push(<option onClick={() => this.selectArticle(key)}><p>{value.name}  ( {value.amount} ) </p></option>)
             }
 
 
@@ -176,21 +258,21 @@ export default class Poraba extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <InputGroup className="mb-3">
+                        <InputGroup className="mb-3" id="addArtikelName">
                             <InputGroup.Text>Artikel: </InputGroup.Text>
                             <Form.Select defaultValue="">
                                 {artikels}
                             </Form.Select>
                         </InputGroup>
 
-                        <InputGroup className="mb-3">
+                        <InputGroup className="mb-3" id="addArtikelNumber">
                             <InputGroup.Text>Število: </InputGroup.Text>
                             <Form.Control />
                         </InputGroup>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="success">
+                    <Button variant="success" onClick={this.addArticle}>
                         Dodaj
                     </Button>
                 </Modal.Footer>
@@ -207,6 +289,19 @@ export default class Poraba extends Component {
                     <Button variant="success">Potrdi</Button>
                 </Modal.Footer>
             </Modal>
+
+        }
+        else if (this.state.dialogRemoveArticle) {
+        
+            var dialog = <Modal show="true">
+            <Modal.Header closeButton onClick={this.closeDialog}>
+                <Modal.Title>Odstrani Artikel</Modal.Title>
+            </Modal.Header>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
+                <Button variant="danger" onClick={this.removeArticle}>Odstrani</Button>
+            </Modal.Footer>
+        </Modal>
 
         }
         else {
@@ -236,7 +331,7 @@ export default class Poraba extends Component {
                 </div>
 
                 <div id="porabaDisplay">
-                    <AddReportComponent opendialogAddArticle={this.opendialogAddArticle} dialogSave={this.openSaveDialog} />
+                    <AddReportComponent newReportData={this.state.newReport} opendialogAddArticle={this.opendialogAddArticle} opendialogRemoveArticle={this.openDialogRemoveArticle} dialogSave={this.openSaveDialog} />
 
                     <HistoryReportsComponent userId={this.state.selectedUser} reports={this.state.reports}/>
                 </div>

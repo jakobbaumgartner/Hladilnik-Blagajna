@@ -98,7 +98,7 @@ export default class Inventorij extends Component {
             querySnapshot.forEach((doc) => {
                data = doc.data();
             });
-            this.setState({cash: data.cashRegister, articlesValue: data.articlesValue, debt: data.usersDebt})
+            this.setState({cash: data.cashRegister})
         })
     }
 

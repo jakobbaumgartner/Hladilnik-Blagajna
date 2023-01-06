@@ -13,42 +13,10 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 export default class AddReportComponent extends Component {
 
-    constructor(props) {
 
-        const d = new Date();
+    removeArticleDialog(key) {
+        console.log(key)
 
-        super(props);
-        this.state = {
-            newReport: {
-                Date: {
-                    day: d.getDate(),
-                    month: d.getMonth(),
-                    year: d.getFullYear()
-                },
-                Articles: {
-                    $4n5pxq24kriob12ogd: {
-                        name: 'Twix 50g',
-                        price: 0.8,
-                        number: 7
-                    },
-                    $4n5pxq24ksiob12ogl: {
-                        name: 'Bounty',
-                        price: 0.68,
-                        number: 4
-                    },
-                    $4n5pxq24krio242oab: {
-                        name: 'Radenska',
-                        price: 0.9,
-                        number: 2
-                    }
-                },
-                Sum: 10.12
-            }
-        }
-    }
-
-    rowa() {
-        console.log("hii")
     }
 
 
@@ -58,10 +26,10 @@ export default class AddReportComponent extends Component {
         // list every inputed article on the list
         var listNewArticles = [];
 
-        for (const [key, value] of Object.entries(this.state.newReport.Articles)) {
+        for (const [key, value] of Object.entries(this.props.newReportData.Articles)) {
 
             listNewArticles.push(
-                <Row onClick={this.rowa} className="rounded newlistArticle" style={{ margin: '5px', padding: '5px' }}>
+                <Row onClick={() => this.props.opendialogRemoveArticle(key)} className="rounded newlistArticle" style={{ margin: '5px', padding: '5px' }}>
 
                     <Col>{value.name}</Col>
                     <Col>{value.price} €</Col>
@@ -76,7 +44,7 @@ export default class AddReportComponent extends Component {
         return (
 
             <Card className="text-center" id="newReportCard">
-                <Card.Header as="h4">Poraba {this.state.newReport.Date.day}.{this.state.newReport.Date.month + 1}.{this.state.newReport.Date.year}</Card.Header>
+                <Card.Header as="h4">Poraba {this.props.newReportData.Date.day}.{this.props.newReportData.Date.month + 1}.{this.props.newReportData.Date.year}</Card.Header>
                 <Card.Body>
                     <Container>
                         <Row>
@@ -96,7 +64,7 @@ export default class AddReportComponent extends Component {
                             </Col>
 
                             <Col>
-                                <b>Skupaj: {this.state.newReport.Sum} € </b>
+                                <b>Skupaj: {this.props.newReportData.Sum} € </b>
                             </Col>
                             <Col>
                                 <Button variant="success" onClick={this.props.dialogSave}>Shrani</Button>
