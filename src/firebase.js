@@ -153,6 +153,12 @@ const updateStockData = async (id, number, price) => {
 
 }
 
+const setPriceOverheadData = async (id, value) => {
+  
+  await setDoc(doc(db, 'inventory', id), { overHead: value }, { merge: true });
+
+}
+
 
 export {
   auth,
@@ -165,5 +171,6 @@ export {
   getRegisterData,
   addArticleData,
   removeArticleData,
-  updateStockData
+  updateStockData,
+  setPriceOverheadData
 };

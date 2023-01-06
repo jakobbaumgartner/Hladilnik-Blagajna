@@ -11,23 +11,6 @@ import Button from 'react-bootstrap/Button';
 
 export default class ArticleComponent extends Component {
     
-    constructor(props) {
-        super(props);
-        this.state = {bonus: 0, boughtPrice: this.props.boughtPrice}
-        this.changeSlider = this.changeSlider.bind(this)
-    }
-
-    changeSlider (event) {
-
-        // console.log(event.target.value)
-        // var newBonus = event.target.value 
-        this.setState({bonus: Math.round(event.target.value * this.props.boughtPrice) / 100,
-                        boughtPrice: Math.round((Number(this.props.boughtPrice) + this.state.bonus)*100)/100})
-        
-    }
-
-    
-
     render() {  
 
         return(
@@ -35,8 +18,8 @@ export default class ArticleComponent extends Component {
             <Card style={{margin: 'auto', width: '90%', maxWidth: '1000px', marginBottom: '20px'}}>
             <Card.Header as="h4">{this.props.Name}</Card.Header>
             <Card.Body>
-              <div className='articlePrice'>Cena: {this.props.boughtPrice} + {this.state.bonus} = {this.state.boughtPrice} €</div>
-             <Form.Range id={this.props.uniqid + '-range'} defaultValue={this.props.overHead} onChange={this.changeSlider}/>
+              <div className='articlePrice'>Cena: {parseFloat(this.props.boughtPrice).toFixed(2)} + {this.props.overHead} % = {parseFloat(this.props.boughtPrice + this.props.boughtPrice * this.props.overHead / 100).toFixed(2)} €</div>
+             <Form.Range id={this.props.uniqid + '-range'} defaultValue={this.props.overHead} onChange={(event) => this.props.changeSliderValue(this.props.uniqid, event.target.value)  }/>
 
             </Card.Body>
             <Card.Body>

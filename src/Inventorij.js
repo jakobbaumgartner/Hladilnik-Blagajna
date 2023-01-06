@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { getInventory, getRegisterData, addArticleData, removeArticleData, updateStockData } from './firebase';
+import { getInventory, getRegisterData, addArticleData, removeArticleData, updateStockData, setPriceOverheadData } from './firebase';
 
 
 
@@ -147,8 +147,26 @@ export default class Inventorij extends Component {
                 this.setState({ inventory: inventory })
             })
         }))
+
         this.setState({dialogAddArticles: 0})
     
+    }
+
+    changeSliderValue(id, value) {
+
+        setPriceOverheadData(id, value).then((()=> {
+
+            getInventory().then((querySnapshot) => {
+
+                var inventory = {};
+    
+                querySnapshot.forEach((doc) => {
+                    inventory[doc.id] = doc.data()
+                });
+    
+                this.setState({ inventory: inventory })
+            })
+        }))
     }
 
     render() {
@@ -235,7 +253,7 @@ export default class Inventorij extends Component {
         for (const [k, v] of Object.entries(this.state.inventory)) {
 
             listItems.push(
-                <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} />
+                <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} changeSliderValue={(id, value) => {this.changeSliderValue(id, value)}}/>
             )
         }
 
