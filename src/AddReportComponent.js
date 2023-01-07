@@ -20,7 +20,6 @@ export default class AddReportComponent extends Component {
     }
 
 
-
     render() {
 
         // list every inputed article on the list
@@ -32,7 +31,7 @@ export default class AddReportComponent extends Component {
                 <Row onClick={() => this.props.opendialogRemoveArticle(key)} className="rounded newlistArticle" style={{ margin: '5px', padding: '5px' }}>
 
                     <Col>{value.name}</Col>
-                    <Col>{value.price} €</Col>
+                    <Col>{Math.round(value.price* 100) / 100} €</Col>
                     <Col>{value.number}</Col>
                     <Col>{Math.round(value.price * value.number * 100) / 100} €</Col>
 
@@ -64,7 +63,7 @@ export default class AddReportComponent extends Component {
                             </Col>
 
                             <Col>
-                                <b>Skupaj: {this.props.newReportData.Sum} € </b>
+                                <b>Skupaj: {Math.round(this.props.newReportData.Sum * 100) / 100} € </b>
                             </Col>
                             <Col>
                                 <Button variant="success" onClick={this.props.dialogSave}>Shrani</Button>

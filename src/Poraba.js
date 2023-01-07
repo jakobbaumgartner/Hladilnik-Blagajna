@@ -11,6 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
+import validator from 'validator';
 import { getUsers, getRecords, getInventory, addCash, getRegisterData } from './firebase';
 
 
@@ -24,23 +25,7 @@ export default class Poraba extends Component {
         super(props);
         this.state = {
             users: [],
-            storage: {
-                $4n5pxq24kriob12ogd: {
-                    name: 'Twix 50g',
-                    price: 0.8,
-                    number: 20
-                },
-                $4n5pxq24ksiob12ogl: {
-                    name: 'Bounty',
-                    price: 0.68,
-                    number: 15
-                },
-                $4n5pxq24krio242oab: {
-                    name: 'Radenska',
-                    price: 0.9,
-                    number: 4
-                }
-            },
+            storage: {},
             newReport: {
                 Date: {
                     day: d.getDate(),
@@ -48,23 +33,9 @@ export default class Poraba extends Component {
                     year: d.getFullYear()
                 },
                 Articles: {
-                    $4n5pxq24kriob12ogd: {
-                        name: 'Twix 50g',
-                        price: 0.8,
-                        number: 7
-                    },
-                    $4n5pxq24ksiob12ogl: {
-                        name: 'Bounty',
-                        price: 0.68,
-                        number: 4
-                    },
-                    $4n5pxq24krio242oab: {
-                        name: 'Radenska',
-                        price: 0.9,
-                        number: 2
-                    }
+
                 },
-                Sum: 10.12
+                Sum: 0
             },
             reports: {},
             selectedUser: '',
@@ -85,8 +56,8 @@ export default class Poraba extends Component {
         this.getStorage = this.getStorage.bind(this)
         this.getUsersData = this.getUsersData.bind(this)
         this.chargeAccount = this.chargeAccount.bind(this)
-
-
+        this.selectArticle = this.selectArticle.bind(this)
+        this.addArticle = this.addArticle.bind(this)
 
 
 
@@ -111,11 +82,11 @@ export default class Poraba extends Component {
 
     openDialogRemoveArticle(id) {
         console.log(id)
-        this.setState({selectedArticle: id})
-        this.setState({dialogRemoveArticle: 1})
+        this.setState({ selectedArticle: id })
+        this.setState({ dialogRemoveArticle: 1 })
     }
 
-    removeArticle () {
+    removeArticle() {
 
         var report = this.state.newReport;
 
@@ -127,21 +98,22 @@ export default class Poraba extends Component {
 
 
     selectUser(user) {
-        this.setState({selectedUser: user,
-                    //    credit: this.state.users[user].credit,
-                       userName: this.state.users[user].name
-                    })
+        this.setState({
+            selectedUser: user,
+            //    credit: this.state.users[user].credit,
+            userName: this.state.users[user].name
+        })
 
         getRecords(user).then((records) => {
 
-            this.setState({reports: records})
-        
-            })
-            
+            this.setState({ reports: records })
+
+        })
+
     }
 
-    getStorage () {
-        getInventory().then((querySnapshot) => {
+    async getStorage() {
+        await getInventory().then((querySnapshot) => {
 
             var inventory = {};
 
@@ -153,14 +125,74 @@ export default class Poraba extends Component {
 
             // console.log(inventory)
         })
-
-
     }
 
-    addArticle () {
-        var name = document.getElementById('addArtikelName').children
-        var number = document.getElementById('addArtikelNumber')
-        console.log(name)
+
+
+    addArticle() {
+        var nameDropdown = document.getElementById('addArtikelName').children
+        var number = document.getElementById('addArtikelNumber').children[1].value
+        var id = ''
+        var item
+
+        console.log(number)
+
+
+        for (let i = 0; i < nameDropdown.length; i++) {
+
+            item = nameDropdown[i]
+
+            if (item.selected) {
+                console.log(item.id)
+                id = item.id
+            }
+        }
+
+
+        var storage = this.state.storage
+        var itemStorage = this.state.storage[id]
+
+        // check if item with id exists
+        if (itemStorage) {
+            console.log(itemStorage)
+
+            // check if it is a number
+            if (validator.isInt(number)) {
+
+                // check if enough items
+                if (itemStorage.amount >= number) {
+
+                    // add to report list
+
+                    var report = this.state.newReport
+
+                    // if item already exists on report
+                    if (report.Articles[id]) {
+                        var old_item = report.Articles[id];
+                        report.Articles[id] = {name: itemStorage.name, number: Number(old_item.number) + Number(number), price: Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100), sum:  old_item.sum + Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100) * number}
+                    } 
+                    else {
+                        report.Articles[id] = {name: itemStorage.name, number: Number(number), price: Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100), sum:  Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100) * number}
+                    }
+
+                    report.Sum = report.Sum + Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100) * number
+                    
+                    
+                    console.log(report)
+
+                    // remove from storage
+
+                    storage[id].amount = storage[id].amount - number
+
+                    // close dialog
+                    this.closeDialog() 
+                    
+                }
+
+            }
+        }
+  
+
     }
 
     selectArticle(id) {
@@ -178,7 +210,7 @@ export default class Poraba extends Component {
                 this.setState({ credit: dat.credit })
             });
 
-            this.setState({users: users})
+            this.setState({ users: users })
 
         })
     }
@@ -193,22 +225,22 @@ export default class Poraba extends Component {
 
 
         addCash(id, value).then(() => {
-            
+
             getRecords(this.state.selectedUser).then((records) => {
 
-            this.setState({reports: records})
+                this.setState({ reports: records })
 
-            this.props.changeUpdateStatus(1)
-        
+                this.props.changeUpdateStatus(1)
+
             })
-        
+
         }
-        
+
         )
 
     }
 
-    componentDidMount() {   
+    componentDidMount() {
 
         console.log('reloaded!!!')
 
@@ -227,9 +259,9 @@ export default class Poraba extends Component {
         for (const [key, user] of Object.entries(this.state.users)) {
             // console.log(`${key}: ${user}`);
             listNames.push(<Dropdown.Item as="button" id={key} key={key} onClick={() => this.selectUser(key)}>{user.name}</Dropdown.Item>)
-          }
+        }
 
-        var stanje = 0;  
+        var stanje = 0;
 
         for (const [k, v] of Object.entries(this.state.reports)) {
 
@@ -243,7 +275,7 @@ export default class Poraba extends Component {
             }
 
         }
-        
+
 
         var dialog;
 
@@ -273,9 +305,12 @@ export default class Poraba extends Component {
 
             var artikels = [];
 
+            artikels.push(<option><p></p></option>)
+
+
             for (const [key, value] of Object.entries(this.state.storage)) {
-                // console.log(`${key}: ${value}`);
-                artikels.push(<option onClick={() => this.selectArticle(key)}><p>{value.name}  ( {value.amount} ) </p></option>)
+                console.log(`${key}: ${value}`);
+                artikels.push(<option id={key}><p>{value.name}  ( {value.amount} ) </p></option>)
             }
 
 
@@ -286,9 +321,9 @@ export default class Poraba extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <InputGroup className="mb-3" id="addArtikelName">
+                        <InputGroup className="mb-3" >
                             <InputGroup.Text>Artikel: </InputGroup.Text>
-                            <Form.Select defaultValue="">
+                            <Form.Select defaultValue="" id="addArtikelName">
                                 {artikels}
                             </Form.Select>
                         </InputGroup>
@@ -320,16 +355,16 @@ export default class Poraba extends Component {
 
         }
         else if (this.state.dialogRemoveArticle) {
-        
+
             var dialog = <Modal show="true">
-            <Modal.Header closeButton onClick={this.closeDialog}>
-                <Modal.Title>Odstrani Artikel</Modal.Title>
-            </Modal.Header>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
-                <Button variant="danger" onClick={this.removeArticle}>Odstrani</Button>
-            </Modal.Footer>
-        </Modal>
+                <Modal.Header closeButton onClick={this.closeDialog}>
+                    <Modal.Title>Odstrani Artikel</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
+                    <Button variant="danger" onClick={this.removeArticle}>Odstrani</Button>
+                </Modal.Footer>
+            </Modal>
 
         }
         else {
@@ -337,7 +372,7 @@ export default class Poraba extends Component {
         }
 
         console.log('loaded poraba')
-      
+
 
         return (
 
@@ -363,8 +398,8 @@ export default class Poraba extends Component {
 
                     <AddReportComponent newReportData={this.state.newReport} opendialogAddArticle={this.opendialogAddArticle} opendialogRemoveArticle={this.openDialogRemoveArticle} dialogSave={this.openSaveDialog} />
 
-                    <HistoryReportsComponent userId={this.state.selectedUser} reports={this.state.reports}/>
-                
+                    <HistoryReportsComponent userId={this.state.selectedUser} reports={this.state.reports} />
+
                 </div>
 
             </div>
