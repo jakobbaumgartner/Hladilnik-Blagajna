@@ -17,10 +17,15 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { date: new Date(), page: 'inventorij'};
+    this.state = { date: new Date(), page: 'inventorij', updateStatus: 0};
     this.changePage = this.changePage.bind(this);
     this.refreshPage = this.refreshPage.bind(this);
-    this.backToLogin = this.backToLogin.bind(this)
+    this.backToLogin = this.backToLogin.bind(this);
+    this.changeUpdateStatus = this.changeUpdateStatus.bind(this);
+  }
+
+  changeUpdateStatus(status) {
+    this.setState({updateStatus: status})
   }
 
   changePage(page) {
@@ -85,10 +90,10 @@ class App extends Component {
             className="mb-3"
           >
             <Tab eventKey="inventorij" title="Inventorij">
-              <Inventorij changePage={this.changePage} />
+              <Inventorij changePage={this.changePage} updateStatus = {this.state.updateStatus} changeUpdateStatus={this.changeUpdateStatus}/>
             </Tab>
             <Tab eventKey="poraba" title="Poraba">
-              <Poraba changePage={this.changePage} />
+              <Poraba changePage={this.changePage} updateStatus = {this.state.updateStatus} changeUpdateStatus={this.changeUpdateStatus}/>
             </Tab>
           </Tabs>
       </div>)

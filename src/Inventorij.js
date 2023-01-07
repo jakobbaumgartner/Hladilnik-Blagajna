@@ -171,6 +171,35 @@ export default class Inventorij extends Component {
 
     render() {
 
+        console.log(this.props.updateStatus)
+
+        if (this.props.updateStatus) {
+
+
+            getInventory().then((querySnapshot) => {
+
+                var inventory = {};
+    
+                querySnapshot.forEach((doc) => {
+                    inventory[doc.id] = doc.data()
+                });
+    
+                this.setState({ inventory: inventory })
+            })
+    
+            getRegisterData().then((querySnapshot) => {
+                var data
+                // console.log(querySnapshot.data())
+                querySnapshot.forEach((doc) => {
+                   data = doc.data();
+                });
+                this.setState({cash: data.cashRegister})
+            })
+
+            this.props.changeUpdateStatus(0)
+        }
+        
+
         console.log('inventorij mounted')
 
         if (this.state.dialogNewArticle) {

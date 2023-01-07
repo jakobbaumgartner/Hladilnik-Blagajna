@@ -160,6 +160,31 @@ const setPriceOverheadData = async (id, value) => {
 
 }
 
+const addCash = async (id, value) => {
+
+  var date = new Date()
+
+  await setDoc(doc(db, "users", id, 'records', uniqid('record-')), {
+    type: 'credit',
+    amount: Number(value),
+    date: date
+  });
+
+  const querySnapshot = await getDocs(collection(db, "register",));
+
+    var register;
+    // console.log(querySnapshot.data())
+    querySnapshot.forEach((doc) => {
+      register = doc.data();
+    });
+
+    console.log(register.cashRegister)
+  
+    await setDoc(doc(db, 'register', 'status'), { cashRegister: Number(register.cashRegister) + Number(value)}, { merge: true });
+
+
+}
+
 
 export {
   auth,
@@ -173,5 +198,6 @@ export {
   addArticleData,
   removeArticleData,
   updateStockData,
-  setPriceOverheadData
+  setPriceOverheadData,
+  addCash
 };

@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
-import { getUsers, getRecords, getInventory } from './firebase';
+import { getUsers, getRecords, getInventory, addCash, getRegisterData } from './firebase';
 
 
 
@@ -84,6 +84,8 @@ export default class Poraba extends Component {
         this.removeArticle = this.removeArticle.bind(this)
         this.getStorage = this.getStorage.bind(this)
         this.getUsersData = this.getUsersData.bind(this)
+        this.chargeAccount = this.chargeAccount.bind(this)
+
 
 
 
@@ -126,7 +128,7 @@ export default class Poraba extends Component {
 
     selectUser(user) {
         this.setState({selectedUser: user,
-                       credit: this.state.users[user].credit,
+                    //    credit: this.state.users[user].credit,
                        userName: this.state.users[user].name
                     })
 
@@ -149,7 +151,7 @@ export default class Poraba extends Component {
 
             this.setState({ storage: inventory })
 
-            console.log(inventory)
+            // console.log(inventory)
         })
 
 
@@ -181,6 +183,31 @@ export default class Poraba extends Component {
         })
     }
 
+    chargeAccount() {
+
+        var id = this.state.selectedUser
+        console.log(id)
+
+        var value = document.getElementById('addCash').children[1].value
+        console.log(value)
+
+
+        addCash(id, value).then(() => {
+            
+            getRecords(this.state.selectedUser).then((records) => {
+
+            this.setState({reports: records})
+
+            this.props.changeUpdateStatus(1)
+        
+            })
+        
+        }
+        
+        )
+
+    }
+
     componentDidMount() {   
 
         console.log('reloaded!!!')
@@ -206,11 +233,7 @@ export default class Poraba extends Component {
 
         for (const [k, v] of Object.entries(this.state.reports)) {
 
-            // listItems.push(
-            //     <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} changeSliderValue={(id, value) => {this.changeSliderValue(id, value)}}/>
-            // )
-
-            console.log(v)
+            // console.log(v)
 
             if (v.Sort == "articles") {
                 stanje = stanje - v.Sum;
@@ -232,7 +255,7 @@ export default class Poraba extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <InputGroup className="mb-3">
+                        <InputGroup className="mb-3" id="addCash">
                             <InputGroup.Text>Polni €</InputGroup.Text>
                             <Form.Control />
                         </InputGroup>
@@ -240,7 +263,7 @@ export default class Poraba extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="warning" >
+                    <Button variant="warning" onClick={this.chargeAccount}>
                         Dodaj
                     </Button>
                 </Modal.Footer>
