@@ -183,11 +183,16 @@ export default class Poraba extends Component {
 
     componentDidMount() {   
 
+        console.log('reloaded!!!')
+
+        this.getStorage()
+        this.getUsersData()
+
+
     }
 
     render() {
 
-        this.getStorage()
 
 
         const listNames = [];
@@ -308,6 +313,7 @@ export default class Poraba extends Component {
             dialog = '';
         }
 
+        console.log('loaded poraba')
       
 
         return (
@@ -331,9 +337,11 @@ export default class Poraba extends Component {
                 </div>
 
                 <div id="porabaDisplay">
+
                     <AddReportComponent newReportData={this.state.newReport} opendialogAddArticle={this.opendialogAddArticle} opendialogRemoveArticle={this.openDialogRemoveArticle} dialogSave={this.openSaveDialog} />
 
                     <HistoryReportsComponent userId={this.state.selectedUser} reports={this.state.reports}/>
+                
                 </div>
 
             </div>

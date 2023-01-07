@@ -171,6 +171,8 @@ export default class Inventorij extends Component {
 
     render() {
 
+        console.log('inventorij mounted')
+
         if (this.state.dialogNewArticle) {
 
             var dialog = <Modal show="true">
