@@ -383,7 +383,7 @@ export default class Poraba extends Component {
                 <div id="displayMainButtons">
 
                     <ListGroup horizontal id="stanje">
-                        <ListGroup.Item><h5>Stanje</h5><br />{stanje}</ListGroup.Item>
+                        <ListGroup.Item><h5>Stanje</h5><br />{stanje} €</ListGroup.Item>
                     </ListGroup>
 
                     <Button variant="warning" id="polni" onClick={this.opendialogAddChange}>Polni</Button>
