@@ -43,7 +43,7 @@ export default class AddReportComponent extends Component {
         return (
 
             <Card className="text-center" id="newReportCard">
-                <Card.Header as="h4">Poraba {this.props.newReportData.Date.day}.{this.props.newReportData.Date.month + 1}.{this.props.newReportData.Date.year}</Card.Header>
+                <Card.Header as="h4">Vnos artiklov</Card.Header>
                 <Card.Body>
                     <Container>
                         <Row>

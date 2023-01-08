@@ -43,9 +43,9 @@ export default class HistoryReportsComponent extends Component {
             <Row className="rounded" style={{ margin: '5px', padding: '5px' }}>
 
                 <Col>{v.name}</Col>
-                <Col>{v.price} €</Col>
-                <Col>{v.amount}</Col>
-                <Col>{Math.round(v.price * v.amount * 100) / 100} €</Col>
+                <Col>{parseFloat(v.price).toFixed(2)} €</Col>
+                <Col>{parseFloat(v.amount).toFixed(2)}</Col>
+                <Col>{parseFloat(v.price * v.amount).toFixed(2)} €</Col>
             </Row>
         )
     }
@@ -63,7 +63,7 @@ export default class HistoryReportsComponent extends Component {
                         </Row>
                         {listNewArticles}
                         <Row>
-                          <Col><b>Vsota: - {value.Sum} €</b></Col>
+                          <Col><b>Vsota: - {parseFloat(value.Sum).toFixed(2)} €</b></Col>
                         </Row>
                     </Container>
           </Accordion.Body>
@@ -92,7 +92,7 @@ export default class HistoryReportsComponent extends Component {
           <Accordion.Body>
           <Container>
                         <Row>
-                          <Col><b>Pripis: + {value.Sum} €</b></Col>
+                          <Col><b>Pripis: + {parseFloat(value.Sum).toFixed(2)} €</b></Col>
                         </Row>
                     </Container>
           </Accordion.Body>

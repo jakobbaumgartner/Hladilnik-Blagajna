@@ -9,7 +9,7 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { getFirestore, collection, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, getDoc, setDoc, deleteDoc, doc } from "firebase/firestore";
 
 import uniqid from 'uniqid';
 
@@ -155,7 +155,7 @@ const updateStockData = async (id, number, price) => {
 }
 
 const setPriceOverheadData = async (id, value) => {
-  
+
   await setDoc(doc(db, 'inventory', id), { overHead: value }, { merge: true });
 
 }
@@ -172,15 +172,81 @@ const addCash = async (id, value) => {
 
   const querySnapshot = await getDocs(collection(db, "register",));
 
-    var register;
-    // console.log(querySnapshot.data())
-    querySnapshot.forEach((doc) => {
-      register = doc.data();
-    });
+  var register;
+  // console.log(querySnapshot.data())
+  querySnapshot.forEach((doc) => {
+    register = doc.data();
+  });
 
-    console.log(register.cashRegister)
-  
-    await setDoc(doc(db, 'register', 'status'), { cashRegister: Number(register.cashRegister) + Number(value)}, { merge: true });
+  console.log(register.cashRegister)
+
+  await setDoc(doc(db, 'register', 'status'), { cashRegister: Number(register.cashRegister) + Number(value) }, { merge: true });
+
+
+}
+
+const saveReport = async (username, newReport) => {
+
+  // check if any articles are on the list
+  if (Object.keys(newReport.Articles).length) {
+
+    var date = new Date()
+
+    var recordID = uniqid('record-');
+
+    await setDoc(doc(db, 'users', username, 'records', recordID), {
+
+
+      date: date,
+      type: 'articles',
+      amount: newReport.Sum
+
+    }, { merge: true })
+      .then(() => {
+
+        for (const [key, value] of Object.entries(newReport.Articles)) {
+
+          // add articles to the list
+          setDoc(doc(db, 'users', username, 'records', recordID, 'articles', key), {
+            name: value.name,
+            amount: value.number,
+            price: value.price
+          }, { merge: true });
+
+
+          // remove articles from inventory
+          getDoc(doc(db, "inventory", key)).then((state) => {
+
+            var newnumber = Number(state.data().amount) - Number(value.number)
+
+            setDoc(doc(db, 'inventory', key), {
+              amount: newnumber
+            }, { merge: true });
+
+
+
+          }
+
+
+          );
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+      })
+
+
+
+  }
 
 
 }
@@ -199,5 +265,6 @@ export {
   removeArticleData,
   updateStockData,
   setPriceOverheadData,
-  addCash
+  addCash,
+  saveReport
 };

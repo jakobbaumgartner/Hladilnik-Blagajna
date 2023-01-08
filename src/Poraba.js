@@ -12,7 +12,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
 import validator from 'validator';
-import { getUsers, getRecords, getInventory, addCash, getRegisterData } from './firebase';
+import { getUsers, getRecords, getInventory, addCash, getRegisterData, saveReport } from './firebase';
 
 
 
@@ -21,17 +21,17 @@ import { getUsers, getRecords, getInventory, addCash, getRegisterData } from './
 export default class Poraba extends Component {
 
     constructor(props) {
-        const d = new Date();
+        // const d = new Date();
         super(props);
         this.state = {
             users: [],
             storage: {},
             newReport: {
-                Date: {
-                    day: d.getDate(),
-                    month: d.getMonth(),
-                    year: d.getFullYear()
-                },
+                // Date: {
+                //     day: d.getDate(),
+                //     month: d.getMonth(),
+                //     year: d.getFullYear()
+                // },
                 Articles: {
 
                 },
@@ -58,6 +58,7 @@ export default class Poraba extends Component {
         this.chargeAccount = this.chargeAccount.bind(this)
         this.selectArticle = this.selectArticle.bind(this)
         this.addArticle = this.addArticle.bind(this)
+        this.saveReportDialog = this.saveReportDialog.bind(this)
 
 
 
@@ -159,8 +160,8 @@ export default class Poraba extends Component {
             // check if it is a number
             if (validator.isInt(number)) {
 
-                // check if enough items
-                if (itemStorage.amount >= number) {
+                // check if enough items & not a negative number
+                if (itemStorage.amount >= number & number > 0 ) {
 
                     // add to report list
 
@@ -180,7 +181,7 @@ export default class Poraba extends Component {
                     
                     console.log(report)
 
-                    // remove from storage
+                    // remove from current storage
 
                     storage[id].amount = storage[id].amount - number
 
@@ -238,6 +239,16 @@ export default class Poraba extends Component {
 
         )
 
+    }
+
+    saveReportDialog() {
+        saveReport(this.state.selectedUser, this.state.newReport).then(()=> {
+            this.setState({newReport: {Articles: {}, Sum: 0}})
+        })
+
+
+
+        this.closeDialog()
     }
 
     componentDidMount() {
@@ -343,15 +354,28 @@ export default class Poraba extends Component {
 
         }
         else if (this.state.dialogSaveReport) {
-            dialog = <Modal show="true">
+            if(this.state.selectedUser) {
+                dialog = <Modal show="true">
+                    <Modal.Header closeButton onClick={this.closeDialog}>
+                        <Modal.Title>Shrani vnos</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
+                        <Button variant="success" onClick={this.saveReportDialog}>Potrdi</Button>
+                    </Modal.Footer>
+                </Modal>
+            }
+            else {
+                dialog = <Modal show="true">
                 <Modal.Header closeButton onClick={this.closeDialog}>
-                    <Modal.Title>Shrani vnos</Modal.Title>
+                    <Modal.Title>Uporabnik ni izbran.</Modal.Title>
                 </Modal.Header>
+              
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.closeDialog}>Prekliči</Button>
-                    <Button variant="success">Potrdi</Button>
                 </Modal.Footer>
             </Modal>
+            }
 
         }
         else if (this.state.dialogRemoveArticle) {
@@ -383,7 +407,7 @@ export default class Poraba extends Component {
                 <div id="displayMainButtons">
 
                     <ListGroup horizontal id="stanje">
-                        <ListGroup.Item><h5>Stanje</h5><br />{stanje} €</ListGroup.Item>
+                        <ListGroup.Item><h5>Stanje</h5><br />{parseFloat(stanje).toFixed(2)} €</ListGroup.Item>
                     </ListGroup>
 
                     <Button variant="warning" id="polni" onClick={this.opendialogAddChange}>Polni</Button>
