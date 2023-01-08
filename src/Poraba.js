@@ -239,6 +239,8 @@ export default class Poraba extends Component {
 
         )
 
+        this.closeDialog()
+
     }
 
     saveReportDialog() {
