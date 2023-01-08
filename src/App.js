@@ -77,6 +77,11 @@ class App extends Component {
     return (
       <div className="App">
 
+          <div id="topBanner">
+          <img src='Logo_LAK.png' height='100%' alt="Logo" />
+
+          </div>
+
           <div id="logout" ><Button className='border' variant="light" onClick={(e) => {
               e.preventDefault()
               logOut().then(() => this.refreshPage())

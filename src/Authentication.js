@@ -13,10 +13,13 @@ export default function Authentication(props) {
 
 
   return (
+
     <div className="Auth-form-container">
       <form className="Auth-form">
+      <img src='Logo_LAK.png' id="authlogo" alt="Logo" />
+        <h1 id="authtitle">Hladilnik 2.0</h1>
         <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Prijava</h3>
+          {/* <h3 className="Auth-form-title">Prijava</h3> */}
           <div className="form-group mt-3">
             <label className="AuthLabel">e-mail</label>
             <input
