@@ -12,11 +12,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { getInventory, getRegisterData, addArticleData, removeArticleData, updateStockData, setPriceOverheadData } from './firebase';
 
 
-
-
-
-
-
 export default class Inventorij extends Component {
 
     constructor(props) {
@@ -33,10 +28,6 @@ export default class Inventorij extends Component {
         this.addArticle = this.addArticle.bind(this)
         this.removeArticleDatabase = this.removeArticleDatabase.bind(this)
         this.addStock = this.addStock.bind(this)
-
-
-
-
 
     }
 
@@ -63,34 +54,67 @@ export default class Inventorij extends Component {
 
         addArticleData(name, price, number).then((()=> {
 
-                getInventory().then((querySnapshot) => {
-    
-                    var inventory = {};
-        
-                    querySnapshot.forEach((doc) => {
-                        inventory[doc.id] = doc.data()
-                    });
-        
-                    this.setState({ inventory: inventory })
-                })
+            this.props.getStorage()
+            
             }))
             
         this.setState({ dialogNewArticle: 0 })
 
     }
 
+    removeArticleDatabase () {
+        removeArticleData(this.state.chosenArticle).then((()=> {
+
+            this.props.getStorage()
+        }))
+        this.setState({dialogRemoveArticle: 0})
+    }
+
+    addStock () {
+        var number = document.getElementById('addStockNumber').children[1].value;
+        var price = document.getElementById('addStockPrice').children[1].value;
+
+        var articleId = this.state.chosenArticle;
+
+        var article = this.props.inventory[articleId]
+
+        console.log(article)
+
+        var newNumber = Number(article.amount) + Number(number);
+        console.log(newNumber)
+        var price = (Number(article.amount) * Number(article.basePrice) + Number(number) * Number(price)) / (newNumber);
+        console.log(price)
+
+        updateStockData (articleId, newNumber, price).then((()=> {
+
+            this.props.getStorage()
+
+        }))
+
+        this.setState({dialogAddArticles: 0})
+    
+    }
+
+    changeSliderValue(id, value) {
+
+        setPriceOverheadData(id, value).then((()=> {
+
+            this.props.getStorage()
+        }))
+    }
+
     componentDidMount() {
 
-        getInventory().then((querySnapshot) => {
+        // getInventory().then((querySnapshot) => {
 
-            var inventory = {};
+        //     var inventory = {};
 
-            querySnapshot.forEach((doc) => {
-                inventory[doc.id] = doc.data()
-            });
+        //     querySnapshot.forEach((doc) => {
+        //         inventory[doc.id] = doc.data()
+        //     });
 
-            this.setState({ inventory: inventory })
-        })
+        //     this.setState({ inventory: inventory })
+        // })
 
         getRegisterData().then((querySnapshot) => {
             var data
@@ -102,72 +126,7 @@ export default class Inventorij extends Component {
         })
     }
 
-    removeArticleDatabase () {
-        removeArticleData(this.state.chosenArticle).then((()=> {
-
-            getInventory().then((querySnapshot) => {
-
-                var inventory = {};
     
-                querySnapshot.forEach((doc) => {
-                    inventory[doc.id] = doc.data()
-                });
-    
-                this.setState({ inventory: inventory })
-            })
-        }))
-        this.setState({dialogRemoveArticle: 0})
-    }
-
-    addStock () {
-        var number = document.getElementById('addStockNumber').children[1].value;
-        var price = document.getElementById('addStockPrice').children[1].value;
-
-        var articleId = this.state.chosenArticle;
-
-        var article = this.state.inventory[articleId]
-
-        console.log(article)
-
-        var newNumber = Number(article.amount) + Number(number);
-        console.log(newNumber)
-        var price = (Number(article.amount) * Number(article.basePrice) + Number(number) * Number(price)) / (newNumber);
-        console.log(price)
-
-        updateStockData (articleId, newNumber, price).then((()=> {
-
-            getInventory().then((querySnapshot) => {
-
-                var inventory = {};
-    
-                querySnapshot.forEach((doc) => {
-                    inventory[doc.id] = doc.data()
-                });
-    
-                this.setState({ inventory: inventory })
-            })
-        }))
-
-        this.setState({dialogAddArticles: 0})
-    
-    }
-
-    changeSliderValue(id, value) {
-
-        setPriceOverheadData(id, value).then((()=> {
-
-            getInventory().then((querySnapshot) => {
-
-                var inventory = {};
-    
-                querySnapshot.forEach((doc) => {
-                    inventory[doc.id] = doc.data()
-                });
-    
-                this.setState({ inventory: inventory })
-            })
-        }))
-    }
 
     render() {
 
@@ -176,16 +135,16 @@ export default class Inventorij extends Component {
         if (this.props.updateStatus) {
 
 
-            getInventory().then((querySnapshot) => {
+            // getInventory().then((querySnapshot) => {
 
-                var inventory = {};
+            //     var inventory = {};
     
-                querySnapshot.forEach((doc) => {
-                    inventory[doc.id] = doc.data()
-                });
+            //     querySnapshot.forEach((doc) => {
+            //         inventory[doc.id] = doc.data()
+            //     });
     
-                this.setState({ inventory: inventory })
-            })
+            //     this.setState({ inventory: inventory })
+            // })
     
             getRegisterData().then((querySnapshot) => {
                 var data
@@ -282,10 +241,10 @@ export default class Inventorij extends Component {
         var listItems = [];
         var vsotaArtiklov = 0;
 
-        for (const [k, v] of Object.entries(this.state.inventory)) {
+        for (const [k, v] of Object.entries(this.props.inventory)) {
 
             listItems.push(
-                <ArticleComponent uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} changeSliderValue={(id, value) => {this.changeSliderValue(id, value)}}/>
+                <ArticleComponent inventory={this.props.inventory} uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} changeSliderValue={(id, value) => {this.changeSliderValue(id, value)}}/>
             )
 
             vsotaArtiklov = vsotaArtiklov + Number(v.amount) * (Number(v.basePrice) * (1 + Number(v.overHead)/100));

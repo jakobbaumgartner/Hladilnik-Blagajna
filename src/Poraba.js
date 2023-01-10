@@ -53,7 +53,7 @@ export default class Poraba extends Component {
         this.openSaveDialog = this.openSaveDialog.bind(this)
         this.openDialogRemoveArticle = this.openDialogRemoveArticle.bind(this)
         this.removeArticle = this.removeArticle.bind(this)
-        this.getStorage = this.getStorage.bind(this)
+        // this.getStorage = this.getStorage.bind(this)
         this.getUsersData = this.getUsersData.bind(this)
         this.chargeAccount = this.chargeAccount.bind(this)
         this.selectArticle = this.selectArticle.bind(this)
@@ -113,20 +113,7 @@ export default class Poraba extends Component {
 
     }
 
-    async getStorage() {
-        await getInventory().then((querySnapshot) => {
-
-            var inventory = {};
-
-            querySnapshot.forEach((doc) => {
-                inventory[doc.id] = doc.data()
-            });
-
-            this.setState({ storage: inventory })
-
-            // console.log(inventory)
-        })
-    }
+  
 
 
 
@@ -150,8 +137,8 @@ export default class Poraba extends Component {
         }
 
 
-        var storage = this.state.storage
-        var itemStorage = this.state.storage[id]
+        var storage = this.props.inventory
+        var itemStorage = this.props.inventory[id]
         var itemReport = this.state.newReport.Articles[id]
 
         console.log(itemStorage)
@@ -169,7 +156,6 @@ export default class Poraba extends Component {
                 // if already some on the report list count them as not aveliable
                 if (itemReport) {
                     numAveliable = itemStorage.amount - itemReport.number
-                    console.log("nanana")
                 }
 
                 // check if enough items & not a negative number
@@ -187,8 +173,6 @@ export default class Poraba extends Component {
                     else {
                         report.Articles[id] = {name: itemStorage.name, number: Number(number), price: Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100), sum:  Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100) * number}
                     }
-
-                    report.Sum = report.Sum + Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100) * number
                     
                     
                     console.log(report)
@@ -255,9 +239,46 @@ export default class Poraba extends Component {
 
     }
 
-    saveReportDialog() {
-        saveReport(this.state.selectedUser, this.state.newReport).then(()=> {
-            this.setState({newReport: {Articles: {}, Sum: 0}})
+    saveReportDialog() { 
+        var sum = 0
+        var articlePrice = 0
+
+        console.log(this.state.newReport.Articles)
+
+        for (const [key, value] of Object.entries(this.state.newReport.Articles)) {
+
+            console.log(this.props.inventory[key])
+
+            articlePrice = Math.round(Number(this.props.inventory[key].basePrice)*(1 + Number(this.props.inventory[key].overHead)/100) * 100) / 100
+
+            console.log(articlePrice)
+            console.log(value.number)
+            sum = Number(sum + articlePrice) * Number(value.number) 
+
+            
+        }
+
+        console.log(sum)
+
+
+        // this.state.newReport.Sum = sum
+
+        var report = { ...this.state.newReport}
+        report.Sum = sum
+
+
+        saveReport(this.state.selectedUser, report).then(()=> {
+            this.setState({newReport: {Articles: {}}})
+            this.getUsersData()
+            getRecords(this.state.selectedUser).then((records) => {
+
+                this.setState({ reports: records })
+
+    
+            }).then(()=> this.props.getStorage())
+            
+
+
         })
 
 
@@ -269,7 +290,7 @@ export default class Poraba extends Component {
 
         console.log('reloaded!!!')
 
-        this.getStorage()
+        // this.getStorage()
         this.getUsersData()
 
 
@@ -337,7 +358,7 @@ export default class Poraba extends Component {
             artikels.push(<option><p></p></option>)
 
 
-            for (const [key, value] of Object.entries(this.state.storage)) {
+            for (const [key, value] of Object.entries(this.props.inventory)) {
                 // console.log(`${key}: ${value}`);
 
                 var number = value.amount;
@@ -451,7 +472,7 @@ export default class Poraba extends Component {
 
                 <div id="porabaDisplay">
 
-                    <AddReportComponent newReportData={this.state.newReport} opendialogAddArticle={this.opendialogAddArticle} opendialogRemoveArticle={this.openDialogRemoveArticle} dialogSave={this.openSaveDialog} />
+                    <AddReportComponent inventory={this.props.inventory} newReportData={this.state.newReport} opendialogAddArticle={this.opendialogAddArticle} opendialogRemoveArticle={this.openDialogRemoveArticle} dialogSave={this.openSaveDialog} />
 
                     <HistoryReportsComponent userId={this.state.selectedUser} reports={this.state.reports} />
 

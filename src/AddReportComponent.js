@@ -24,16 +24,24 @@ export default class AddReportComponent extends Component {
 
         // list every inputed article on the list
         var listNewArticles = [];
+        var articlePrice = 0
+        var sum = 0
+
 
         for (const [key, value] of Object.entries(this.props.newReportData.Articles)) {
+
+            console.log(this.props.inventory[key])
+
+            articlePrice = Math.round(Number(this.props.inventory[key].basePrice)*(1 + Number(this.props.inventory[key].overHead)/100) * 100) / 100
+            sum = sum + articlePrice * value.number 
 
             listNewArticles.push(
                 <Row onClick={() => this.props.opendialogRemoveArticle(key)} className="rounded newlistArticle" style={{ margin: '5px', padding: '5px' }}>
 
                     <Col>{value.name}</Col>
-                    <Col>{Math.round(value.price* 100) / 100} €</Col>
+                    <Col>{articlePrice} €</Col>
                     <Col>{value.number}</Col>
-                    <Col>{Math.round(value.price * value.number * 100) / 100} €</Col>
+                    <Col>{Math.round(articlePrice * value.number * 100) / 100} €</Col>
 
                 </Row>
             )
@@ -63,7 +71,7 @@ export default class AddReportComponent extends Component {
                             </Col>
 
                             <Col>
-                                <b>Skupaj: {Math.round(this.props.newReportData.Sum * 100) / 100} € </b>
+                                <b>Skupaj: {Math.round(sum * 100) / 100} € </b>
                             </Col>
                             <Col>
                                 <Button variant="success" onClick={this.props.dialogSave}>Shrani</Button>

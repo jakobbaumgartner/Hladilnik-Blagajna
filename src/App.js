@@ -8,7 +8,8 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Button from 'react-bootstrap/Button';
 import Auth from "./Authentication.js"
-import { auth, logOut } from "./firebase";
+import { auth, logOut, getUsers, getRecords, getInventory, addCash, getRegisterData, saveReport } from './firebase';
+
 
 
 
@@ -17,11 +18,12 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { date: new Date(), page: 'inventorij', updateStatus: 0};
+    this.state = {storage: {}, date: new Date(), page: 'inventorij', updateStatus: 0};
     this.changePage = this.changePage.bind(this);
     this.refreshPage = this.refreshPage.bind(this);
     this.backToLogin = this.backToLogin.bind(this);
     this.changeUpdateStatus = this.changeUpdateStatus.bind(this);
+    this.getStorage = this.getStorage.bind(this)
   }
 
   changeUpdateStatus(status) {
@@ -43,6 +45,23 @@ class App extends Component {
     this.setState({page: 'login'})
   }
 
+  getStorage() {
+    getInventory().then((querySnapshot) => {
+
+        var inventory = {};
+
+        querySnapshot.forEach((doc) => {
+            inventory[doc.id] = doc.data()
+        });
+
+        this.setState({ storage: inventory })
+
+        // console.log(inventory)
+
+        console.log('storage')
+    })
+}
+
 
   componentDidMount() {
 
@@ -60,6 +79,7 @@ class App extends Component {
 
     // console.log("AAAAAAAAAA")
 
+    this.getStorage()
   }
 
 
@@ -95,10 +115,10 @@ class App extends Component {
             className="mb-3"
           >
             <Tab eventKey="inventorij" title="Inventorij">
-              <Inventorij changePage={this.changePage} updateStatus = {this.state.updateStatus} changeUpdateStatus={this.changeUpdateStatus}/>
+              <Inventorij getStorage = {this.getStorage} inventory={this.state.storage} changePage={this.changePage} updateStatus = {this.state.updateStatus} changeUpdateStatus={this.changeUpdateStatus}/>
             </Tab>
             <Tab eventKey="poraba" title="Poraba">
-              <Poraba changePage={this.changePage} updateStatus = {this.state.updateStatus} changeUpdateStatus={this.changeUpdateStatus}/>
+              <Poraba getStorage = {this.getStorage} inventory={this.state.storage} changePage={this.changePage} updateStatus = {this.state.updateStatus} changeUpdateStatus={this.changeUpdateStatus}/>
             </Tab>
           </Tabs>
       </div>)
