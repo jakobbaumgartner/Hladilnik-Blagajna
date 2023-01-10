@@ -11,7 +11,6 @@ export default function Authentication(props) {
   const [email, setEmail] = useState("");
   const [user, loading, error] = useAuthState(auth);
 
-
   return (
 
     <div className="Auth-form-container">

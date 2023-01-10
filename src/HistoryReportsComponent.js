@@ -52,7 +52,7 @@ export default class HistoryReportsComponent extends Component {
 
       HistoryReports.push(
         <Accordion.Item eventKey={key}>
-          <Accordion.Header><h5>{value.Date.day}.{value.Date.month + 1}.{value.Date.year}</h5></Accordion.Header>
+          <Accordion.Header><h5>{value.Date.day}.{value.Date.month}.{value.Date.year+1}</h5></Accordion.Header>
           <Accordion.Body>
           <Container>
                         <Row>
@@ -74,7 +74,7 @@ export default class HistoryReportsComponent extends Component {
       if (value.Sort == 'credit') {
         HistoryReports.push(
           <Accordion.Item eventKey={key}>
-            <Accordion.Header><h5>{value.Date.day}.{value.Date.month + 1}.{value.Date.year}</h5></Accordion.Header>
+            <Accordion.Header><h5>{value.Date.day}.{value.Date.month}.{value.Date.year+1}</h5></Accordion.Header>
             <Accordion.Body>
             <Container>
                           <Row>
@@ -88,7 +88,7 @@ export default class HistoryReportsComponent extends Component {
     if (value.Sort == 'bonus') {
       HistoryReports.push(
         <Accordion.Item eventKey={key}>
-          <Accordion.Header><h5>{value.Date.day}.{value.Date.month + 1}.{value.Date.year} </h5></Accordion.Header>
+          <Accordion.Header><h5>{value.Date.day}.{value.Date.month}.{value.Date.year+1} </h5></Accordion.Header>
           <Accordion.Body>
           <Container>
                         <Row>

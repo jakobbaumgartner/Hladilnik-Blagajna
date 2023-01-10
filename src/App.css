@@ -90,6 +90,12 @@
   margin-bottom: 5px;
 }
 
+#userName {
+  display: block;
+  float: left;
+  margin-bottom: 5px;
+}
+
 #newReportCard {
   /* margin: 40px; */
   /* width: 90%; */
@@ -119,9 +125,10 @@
 }
 
 #displayStanje {
-    display: block;
-    float: left;
+    /* display: block;
+    float: left; */
     width: 100%;
+    height: 100px;
     margin: auto;
 
 }
@@ -136,7 +143,23 @@
   /* margin: 50px; */
 }
 
+#statistikaDisplay {
+  /* display: block; */
+  /* float: left; */
+  width: 100%;
+  max-width: 1000px; 
+  margin: auto;
+  margin-top: 20px;
+}
+
 #porabacontainer {
+  width: 100%;
+  height: 100%;
+}
+
+#statistikacontainer {
+  /* display: block;
+  float: left; */
   width: 100%;
   height: 100%;
 }

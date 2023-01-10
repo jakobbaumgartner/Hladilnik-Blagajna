@@ -9,6 +9,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Button from 'react-bootstrap/Button';
 import Auth from "./Authentication.js"
 import { auth, logOut, getUsers, getRecords, getInventory, addCash, getRegisterData, saveReport } from './firebase';
+import Statistika from './Statistika';
 
 
 
@@ -65,6 +66,7 @@ class App extends Component {
 
   componentDidMount() {
 
+
     const user =  auth.onAuthStateChanged(function(user) {
       // if (user) {
       //   // User is signed in.
@@ -87,9 +89,28 @@ class App extends Component {
 
     if (!auth.currentUser) {
 
-      return (
+
+      if(window.location.pathname == '/') {
+        return (
           <Auth refreshPage={this.refreshPage}/>
         )
+      }
+      else {
+        var str = window.location.pathname
+        var pathid = str.substring(1);
+        console.log(pathid)
+
+        return(
+          <div className="App">
+          <div id="topBanner">
+          <img src='Logo_LAK.png' height='100%' alt="Logo" />
+          </div>
+          <Statistika userID = {pathid}  getStorage = {this.getStorage} inventory={this.state.storage} changePage={this.changePage} updateStatus = {this.state.updateStatus} changeUpdateStatus={this.changeUpdateStatus}/>
+          </div>
+        )
+
+      }
+      
 
     }
     else {
