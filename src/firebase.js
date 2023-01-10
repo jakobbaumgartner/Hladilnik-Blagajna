@@ -133,9 +133,9 @@ const addArticleData = async (name, basePrice, number) => {
 
   var postResponse = setDoc(doc(db, "inventory", uniqid('article-')), {
     name: name,
-    basePrice: basePrice,
-    overHead: 0,
-    amount: number
+    basePrice: Number(basePrice),
+    overHead: Number(0),
+    amount: Number(number)
   });
 
   return "sentData"

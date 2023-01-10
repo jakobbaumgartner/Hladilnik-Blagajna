@@ -82,7 +82,7 @@ export default class Poraba extends Component {
     }
 
     openDialogRemoveArticle(id) {
-        console.log(id)
+        // console.log(id)
         this.setState({ selectedArticle: id })
         this.setState({ dialogRemoveArticle: 1 })
     }
@@ -152,6 +152,10 @@ export default class Poraba extends Component {
 
         var storage = this.state.storage
         var itemStorage = this.state.storage[id]
+        var itemReport = this.state.newReport.Articles[id]
+
+        console.log(itemStorage)
+        console.log(itemReport)
 
         // check if item with id exists
         if (itemStorage) {
@@ -160,8 +164,16 @@ export default class Poraba extends Component {
             // check if it is a number
             if (validator.isInt(number)) {
 
+                var numAveliable = itemStorage.amount
+
+                // if already some on the report list count them as not aveliable
+                if (itemReport) {
+                    numAveliable = itemStorage.amount - itemReport.number
+                    console.log("nanana")
+                }
+
                 // check if enough items & not a negative number
-                if (itemStorage.amount >= number & number > 0 ) {
+                if (numAveliable >= number & number > 0 ) {
 
                     // add to report list
 
@@ -183,7 +195,7 @@ export default class Poraba extends Component {
 
                     // remove from current storage
 
-                    storage[id].amount = storage[id].amount - number
+                    // storage[id].amount = storage[id].amount - number
 
                     // close dialog
                     this.closeDialog() 
@@ -318,12 +330,29 @@ export default class Poraba extends Component {
 
             var artikels = [];
 
+            // console.log(this.state.newReport)
+            // console.log('---------------------hhh')
+            // console.log(this.state.storage['dd'])
+
             artikels.push(<option><p></p></option>)
 
 
             for (const [key, value] of Object.entries(this.state.storage)) {
-                console.log(`${key}: ${value}`);
-                artikels.push(<option id={key}><p>{value.name}  ( {value.amount} ) </p></option>)
+                // console.log(`${key}: ${value}`);
+
+                var number = value.amount;
+
+                if (this.state.newReport.Articles[key]) {
+                    // console.log("hereee")
+                    // console.log(value.amount)
+                    // console.log(this.state.newReport.Articles[key].number)
+                    number = value.amount - this.state.newReport.Articles[key].number
+                }
+
+
+                artikels.push(<option id={key}><p>{value.name}  ( {number} ) </p></option>)
+
+
             }
 
 
