@@ -452,11 +452,11 @@ export default class Poraba extends Component {
 
         return (
 
-            <div style={{ width: '100%' }}>
+            <div id="porabacontainer">
 
                 {dialog}
 
-                <div id="displayMainButtons">
+                <div id="displayStanje">
 
                     <ListGroup horizontal id="stanje">
                         <ListGroup.Item><h5>Stanje</h5><br />{parseFloat(stanje).toFixed(2)} €</ListGroup.Item>
