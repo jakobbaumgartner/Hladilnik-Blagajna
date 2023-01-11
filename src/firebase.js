@@ -230,24 +230,21 @@ const saveReport = async (username, newReport) => {
 
           );
 
-
-
-
-
-
-
-
-
-
         }
 
 
       })
 
-
-
   }
+}
 
+const addUserData = async (name, nickname, ID) => {
+
+  var postResponse = await setDoc(doc(db, "users", ID), {
+    name: name, 
+    nickname: nickname,
+    hiddenid:ID
+  });
 
 }
 
@@ -266,5 +263,6 @@ export {
   updateStockData,
   setPriceOverheadData,
   addCash,
-  saveReport
+  saveReport,
+  addUserData
 };

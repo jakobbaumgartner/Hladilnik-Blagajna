@@ -12,7 +12,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
 import validator from 'validator';
-import { getUsers, getRecords, getInventory, addCash, getRegisterData, saveReport } from './firebase';
+import uniqid from 'uniqid';
+import { getUsers, getRecords, getInventory, addCash, getRegisterData, saveReport, addUserData } from './firebase';
 
 
 
@@ -44,7 +45,8 @@ export default class Poraba extends Component {
             dialogAddChange: 0,
             dialogAddArticle: 0,
             dialogRemoveArticle: 0,
-            dialogSaveReport: 0
+            dialogSaveReport: 0,
+            dialogAddUser: 0
         }
 
         this.closeDialog = this.closeDialog.bind(this)
@@ -59,6 +61,8 @@ export default class Poraba extends Component {
         this.selectArticle = this.selectArticle.bind(this)
         this.addArticle = this.addArticle.bind(this)
         this.saveReportDialog = this.saveReportDialog.bind(this)
+        this.openDialogAddUser = this.openDialogAddUser.bind(this)
+        this.addUser = this.addUser.bind(this)
 
 
 
@@ -68,13 +72,17 @@ export default class Poraba extends Component {
         this.setState({ dialogAddChange: 1 })
     }
 
+    openDialogAddUser() {
+        this.setState({ dialogAddUser: 1 })
+    }
+
     opendialogAddArticle() {
         this.setState({ dialogAddArticle: 1 })
     }
 
 
     closeDialog() {
-        this.setState({ dialogAddChange: 0, dialogAddArticle: 0, dialogRemoveArticle: 0, dialogSaveReport: 0 });
+        this.setState({ dialogAddChange: 0, dialogAddArticle: 0, dialogRemoveArticle: 0, dialogSaveReport: 0, dialogAddUser: 0});
     }
 
     openSaveDialog() {
@@ -192,12 +200,32 @@ export default class Poraba extends Component {
 
     }
 
+    addUser() {
+
+        var name = document.getElementById('addUserName').children[1].value
+        var nickname = document.getElementById('addUserNickname').children[1].value
+        var ID = document.getElementById('addUserID').children[1].value
+
+        console.log(name)
+        console.log(nickname)
+        console.log(ID)
+
+        if(ID == '') {
+            ID = uniqid(nickname+'-')
+        }
+
+        addUserData(name, nickname, ID).then((a)=>{this.getUsersData()})
+
+        // this.closeDialog()
+
+    }
+
     selectArticle(id) {
         console.log(id)
     }
 
-    getUsersData() {
-        getUsers().then((querySnapshot) => {
+    async getUsersData() {
+        await getUsers().then((querySnapshot) => {
             var users = {};
 
             querySnapshot.forEach((doc) => {
@@ -304,8 +332,15 @@ export default class Poraba extends Component {
 
         for (const [key, user] of Object.entries(this.state.users)) {
             // console.log(`${key}: ${user}`);
-            listNames.push(<Dropdown.Item as="button" id={key} key={key} onClick={() => this.selectUser(key)}>{user.name}</Dropdown.Item>)
+            if(user.name !== 'Odpis') {
+                listNames.push(<Dropdown.Item as="button" id={key} key={key} onClick={() => this.selectUser(key)}>{user.name}</Dropdown.Item>)
+            }
+           
         }
+        listNames.push(<Dropdown.Divider />)
+        listNames.push(<Dropdown.Item as="button" id={'Odpis'} key={'Odpis'} onClick={() => this.selectUser('Odpis')}><b>{'Odpis'}</b></Dropdown.Item>)
+        listNames.push(<Dropdown.Item as="button" id='addUser' key='addUser' onClick={this.openDialogAddUser}><b>Dodaj Uporabnika</b></Dropdown.Item>)
+
 
         var stanje = 0;
 
@@ -430,9 +465,40 @@ export default class Poraba extends Component {
             }
 
         }
+        else if (this.state.dialogAddUser) {
+            dialog = <Modal show="true">
+            <Modal.Header closeButton onClick={this.closeDialog}>
+                <Modal.Title>Dodaj uporabnika</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                
+                    <InputGroup className="mb-3" id="addUserName" >
+                        <InputGroup.Text>Ime in priimek: </InputGroup.Text>
+                        <Form.Control/>
+                    </InputGroup>
+
+                    <InputGroup className="mb-3" id="addUserNickname">
+                        <InputGroup.Text>Nickname: </InputGroup.Text>
+                        <Form.Control />
+                    </InputGroup>
+
+                    <InputGroup className="mb-3" id="addUserID">
+                        <InputGroup.Text>ID: </InputGroup.Text>
+                        <Form.Control placeholder="Pusti prazno za avtomatsko."/>
+                    </InputGroup>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="success" onClick={this.addUser}>
+                    Shrani
+                </Button>
+            </Modal.Footer>
+        </Modal>
+        }
         else if (this.state.dialogRemoveArticle) {
 
-            var dialog = <Modal show="true">
+            dialog = <Modal show="true">
                 <Modal.Header closeButton onClick={this.closeDialog}>
                     <Modal.Title>Odstrani Artikel</Modal.Title>
                 </Modal.Header>
