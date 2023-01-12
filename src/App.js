@@ -8,7 +8,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Button from 'react-bootstrap/Button';
 import Auth from "./Authentication.js"
-import { auth, logOut, getUsers, getRecords, getInventory, addCash, getRegisterData, saveReport } from './firebase';
+import { auth, logOut, getUsers, getRecords, getInventory, addCash, getRegisterData, saveReport, getAllUsersData } from './firebase';
 import Statistika from './Statistika';
 
 
@@ -64,7 +64,11 @@ class App extends Component {
 }
 
 
+
+
   componentDidMount() {
+
+    getAllUsersData()
 
 
     const user =  auth.onAuthStateChanged(function(user) {

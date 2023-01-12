@@ -52,6 +52,31 @@ const getUsers = async () => {
   return querySnapshot
 }
 
+const getAllUsersData = async () => {
+
+  var allUsers = {}
+
+  const querySnapshot = await getDocs(collection(db, "users",));
+
+  console.log("USERDATA")
+
+  querySnapshot.forEach((doc) => {
+
+    var dat = doc.data()
+    var id = doc.id
+
+    allUsers[id] = dat
+
+});
+
+
+console.log(allUsers)
+
+
+
+
+}
+
 const getInventory = async () => {
 
   const querySnapshot = await getDocs(collection(db, "inventory",));
@@ -194,6 +219,16 @@ const saveReport = async (username, newReport) => {
 
     var recordID = uniqid('record-');
 
+    const querySnapshot = await getDocs(collection(db, "register",));
+
+    var register;
+    // console.log(querySnapshot.data())
+    querySnapshot.forEach((doc) => {
+      register = doc.data();
+    });
+
+    await setDoc(doc(db, 'register', 'status'), { cashRegister: Number(register.cashRegister) - Number(newReport.Sum) }, { merge: true });
+
     await setDoc(doc(db, 'users', username, 'records', recordID), {
 
 
@@ -238,12 +273,12 @@ const saveReport = async (username, newReport) => {
   }
 }
 
-const addUserData = async (name, nickname, ID) => {
+const addUserData = async (name, nickname, ID, hiddenid) => {
 
   var postResponse = await setDoc(doc(db, "users", ID), {
     name: name, 
     nickname: nickname,
-    hiddenid:ID
+    hiddenid: hiddenid
   });
 
 }
@@ -264,5 +299,6 @@ export {
   setPriceOverheadData,
   addCash,
   saveReport,
-  addUserData
+  addUserData,
+  getAllUsersData
 };

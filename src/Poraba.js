@@ -176,10 +176,10 @@ export default class Poraba extends Component {
                     // if item already exists on report
                     if (report.Articles[id]) {
                         var old_item = report.Articles[id];
-                        report.Articles[id] = {name: itemStorage.name, number: Number(old_item.number) + Number(number), price: Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100), sum:  old_item.sum + Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100) * number}
+                        report.Articles[id] = {name: itemStorage.name, number: Number(old_item.number) + Number(number), price: Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100)}
                     } 
                     else {
-                        report.Articles[id] = {name: itemStorage.name, number: Number(number), price: Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100), sum:  Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100) * number}
+                        report.Articles[id] = {name: itemStorage.name, number: Number(number), price: Number(itemStorage.basePrice) * (1 + Number(itemStorage.overHead)/100)}
                     }
                     
                     
@@ -209,12 +209,14 @@ export default class Poraba extends Component {
         console.log(name)
         console.log(nickname)
         console.log(ID)
+        var hiddenid = uniqid()
+
 
         if(ID == '') {
             ID = uniqid(nickname+'-')
         }
 
-        addUserData(name, nickname, ID).then((a)=>{this.getUsersData()})
+        addUserData(name, nickname, ID, hiddenid).then((a)=>{this.getUsersData()})
 
         // this.closeDialog()
 
@@ -277,11 +279,11 @@ export default class Poraba extends Component {
 
             console.log(this.props.inventory[key])
 
-            articlePrice = Math.round(Number(this.props.inventory[key].basePrice)*(1 + Number(this.props.inventory[key].overHead)/100) * 100) / 100
+            articlePrice = Number(this.props.inventory[key].basePrice)*(1 + Number(this.props.inventory[key].overHead)/100)
 
             console.log(articlePrice)
             console.log(value.number)
-            sum = Number(sum + articlePrice) * Number(value.number) 
+            sum = Number(sum + articlePrice * Number(value.number)) 
 
             
         }
@@ -303,7 +305,11 @@ export default class Poraba extends Component {
                 this.setState({ reports: records })
 
     
-            }).then(()=> this.props.getStorage())
+            }).then(()=> {
+                this.props.getStorage()    
+                this.props.changeUpdateStatus(1)
+            }
+                )
             
 
 

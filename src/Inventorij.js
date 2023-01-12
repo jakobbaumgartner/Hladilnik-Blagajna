@@ -247,7 +247,7 @@ export default class Inventorij extends Component {
                 <ArticleComponent inventory={this.props.inventory} uniqid={k} Name={v.name} boughtPrice={v.basePrice} overHead={v.overHead} number={v.amount} addArticles={this.openDialogAdd} removeArticle={(id) => this.removeArticle(id)} changeSliderValue={(id, value) => {this.changeSliderValue(id, value)}}/>
             )
 
-            vsotaArtiklov = vsotaArtiklov + Number(v.amount) * (Number(v.basePrice) * (1 + Number(v.overHead)/100));
+            vsotaArtiklov = vsotaArtiklov + Number(v.amount) * Number(v.basePrice)
         }
 
 
