@@ -78,7 +78,7 @@ export default class HistoryReportsComponent extends Component {
             <Accordion.Body>
             <Container>
                           <Row>
-                            <Col><b>Polnitev: + {value.Sum} €</b></Col>
+                            <Col><b>Polnitev:  {value.Sum} €</b></Col>
                           </Row>
                       </Container>
             </Accordion.Body>
@@ -92,7 +92,7 @@ export default class HistoryReportsComponent extends Component {
           <Accordion.Body>
           <Container>
                         <Row>
-                          <Col><b>Pripis: + {parseFloat(value.Sum).toFixed(2)} €</b></Col>
+                          <Col><b>Pripis:  {parseFloat(value.Sum).toFixed(2)} €</b></Col>
                         </Row>
                     </Container>
           </Accordion.Body>
