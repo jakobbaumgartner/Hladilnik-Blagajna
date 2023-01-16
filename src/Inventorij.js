@@ -55,6 +55,8 @@ export default class Inventorij extends Component {
         addArticleData(name, price, number).then((()=> {
 
             this.props.getStorage()
+            this.props.updateBoughtList()
+
             
             }))
             
@@ -82,12 +84,14 @@ export default class Inventorij extends Component {
 
         var newNumber = Number(article.amount) + Number(number);
         console.log(newNumber)
-        var price = (Number(article.amount) * Number(article.basePrice) + Number(number) * Number(price)) / (newNumber);
+        var newPrice = (Number(article.amount) * Number(article.basePrice) + Number(number) * Number(price)) / (newNumber);
         console.log(price)
 
-        updateStockData (articleId, newNumber, price).then((()=> {
+        updateStockData (articleId, newNumber, newPrice, number, price, article.name).then((()=> {
 
             this.props.getStorage()
+            this.props.updateBoughtList()
+
 
         }))
 

@@ -9,7 +9,7 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { getFirestore, collection, getDocs, getDoc, setDoc, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, getDoc, setDoc, deleteDoc, doc, Timestamp } from "firebase/firestore";
 
 import uniqid from 'uniqid';
 
@@ -72,9 +72,13 @@ const getAllUsersData = async () => {
 
 console.log(allUsers)
 
+}
 
+const getBoughtList = async () => {
 
+  const querySnapshot = await getDocs(collection(db, "bought"));
 
+  return querySnapshot
 }
 
 const getInventory = async () => {
@@ -163,6 +167,13 @@ const addArticleData = async (name, basePrice, number) => {
     amount: Number(number)
   });
 
+  var postResponse = setDoc(doc(db, "bought", uniqid()), {
+    name: name,
+    basePrice: Number(basePrice),
+    amount: Number(number),
+    date: Timestamp.now()
+  });
+
   return "sentData"
 
 }
@@ -173,9 +184,16 @@ const removeArticleData = async (id) => {
 
 }
 
-const updateStockData = async (id, number, price) => {
+const updateStockData = async (articleId, newNumber, price, number, boughtPrice, articleName) => {
 
-  await setDoc(doc(db, 'inventory', id), { amount: number, basePrice: price }, { merge: true });
+  await setDoc(doc(db, 'inventory', articleId), { amount: newNumber, basePrice: price }, { merge: true });
+
+  var postResponse = setDoc(doc(db, "bought", uniqid()), {
+    name: articleName,
+    basePrice: Number(boughtPrice),
+    amount: Number(number),
+    date: Timestamp.now()
+  });
 
 }
 
@@ -300,5 +318,6 @@ export {
   addCash,
   saveReport,
   addUserData,
-  getAllUsersData
+  getAllUsersData,
+  getBoughtList
 };
