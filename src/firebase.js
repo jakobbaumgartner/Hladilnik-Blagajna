@@ -307,6 +307,11 @@ const calcualteAllItemsSold = async () => {
   // get a reference to the "users" collection
 const usersCollectionRef = collection(db, 'users');
 
+var allData = []
+
+var totalSumArticles = 0;
+var totalSumCash = 0;
+
 // retrieve all documents in the "users" collection
 getDocs(usersCollectionRef)
   .then((querySnapshot) => {
@@ -337,18 +342,37 @@ getDocs(usersCollectionRef)
 
         });
 
+        totalSumArticles += sumSoldArticles;
+        totalSumCash += sumCashInflow;
+  
+        allData.push({"id": userDoc.id, "name": userDoc.name, "hiddenid": userDoc.hiddenid, "sumArticles": sumSoldArticles, "sumCash":  sumCashInflow})
+
         console.log(`User ${userDoc.id} total amount articles: ${sumSoldArticles}, total amount input: ${sumCashInflow}`);
       });
+    
+      // WORKS NEEDED HERE !!!!!!!!!!!!!!!!!!!!!!!!!
+
     });
   })
 
 
-
-
-
-
-
 }
+
+async function calculateBoughtSum() {
+  // Define a function to calculate the sum of "amount" * "basePrice" for each document
+
+  let sum = 0;
+
+  const boughtRef = collection(db, "bought");
+
+  const querySnapshot = await getDocs(boughtRef);
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    sum += data.amount * data.basePrice;
+  });
+  return sum;
+}
+
 
 
 export {
@@ -369,5 +393,6 @@ export {
   addUserData,
   getAllUsersData,
   getBoughtList,
-  calcualteAllItemsSold
+  calcualteAllItemsSold,
+  calculateBoughtSum
 };

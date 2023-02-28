@@ -11,6 +11,7 @@ import Auth from "./Authentication.js"
 import { auth, logOut, getUsers, getRecords, getInventory, getBoughtList, addCash, getRegisterData, saveReport, getAllUsersData } from './firebase';
 import Statistika from './Statistika';
 import Nakup from './Nakup';
+import Pregled from './Pregled'
 
 
 
@@ -179,6 +180,9 @@ class App extends Component {
             </Tab>
             <Tab eventKey="Nakup" title="Nakup">
               <Nakup boughtSum={this.state.boughtSum} boughtList={this.state.boughtList} updateBoughtList={this.getItems} />
+            </Tab>
+            <Tab eventKey="Pregled" title="Pregled">
+              <Pregled />
             </Tab>
           </Tabs>
         </div>)

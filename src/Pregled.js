@@ -12,14 +12,15 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
 import validator from 'validator';
+import { getBoughtList, calcualteAllItemsSold, calculateBoughtSum } from './firebase';
 
 
 
 
-export default class Nakup extends Component {
+
+export default class Pregled extends Component {
 
     constructor(props) {
-        // const d = new Date();
         super(props);
         this.state = {
 
@@ -27,35 +28,29 @@ export default class Nakup extends Component {
     }
 
 
+
+    componentDidMount() {
+        calcualteAllItemsSold()
+
+        // Call the calculateSum() function and log the result to the console
+        calculateBoughtSum()
+            .then((sum) => {
+                console.log(`The total sum of bought items is ${sum}`)
+                this.setState({ "amountTotalBought": sum })
+            })
+            .catch((error) => console.error(error));
+
+    }
+
     render() {
 
-        var list = []
-
-        for (const [k, v] of Object.entries(this.props.boughtList)) {
-
-            console.log(v)
-
-            list.push(<p text-align="left"	>IME: {v.name} -- KOLIČINA: {v.amount} -- CENA: {v.basePrice} € >>> VSOTA: {v.amount * v.basePrice} € -- DATUM: {v.date.toDate().getDate()} . {v.date.toDate().getMonth()+1} . {v.date.toDate().getFullYear()} </p>)
-
-            console.log(v.date.toDate().getMonth())
-
-        }
-
-
-
-        console.log('loaded nakup')
 
 
         return (
 
             <div id="statistikacontainer">
 
-                <div id="statistikaDisplay">
-                    <h3>Skupaj kupljeno: {this.props.boughtSum} €</h3><br></br>
 
-                    {list}
-                    
-                </div>
 
             </div>
         )
