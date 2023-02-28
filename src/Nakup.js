@@ -12,7 +12,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
 import validator from 'validator';
-import { getBoughtList } from './firebase';
+import { getBoughtList, calcualteAllItemsSold } from './firebase';
 
 
 
@@ -31,6 +31,7 @@ export default class Nakup extends Component {
 
 
     componentDidMount() {
+        calcualteAllItemsSold()
 
     }
 

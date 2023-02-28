@@ -9,7 +9,7 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { getFirestore, collection, getDocs, getDoc, setDoc, deleteDoc, doc, Timestamp } from "firebase/firestore";
+import { getFirestore, collection, collectionGroup, getDocs, getDoc, setDoc, deleteDoc, doc, Timestamp } from "firebase/firestore";
 
 import uniqid from 'uniqid';
 
@@ -301,6 +301,55 @@ const addUserData = async (name, nickname, ID, hiddenid) => {
 
 }
 
+const calcualteAllItemsSold = async () => {
+  console.log("Started Calculations")
+  
+  // get a reference to the "users" collection
+const usersCollectionRef = collection(db, 'users');
+
+// retrieve all documents in the "users" collection
+getDocs(usersCollectionRef)
+  .then((querySnapshot) => {
+    querySnapshot.forEach((userDoc) => {
+      // get a reference to the "records" sub-collection for this user
+      const recordsCollectionRef = collection(userDoc.ref, 'records');
+
+      // create a query to filter the documents by user ID
+      // const userQuery = query(recordsCollectionRef, where('userId', '==', userDoc.id));
+
+      // initialize sum to 0
+      let sumSoldArticles = 0;
+      let sumCashInflow = 0;
+
+
+      // retrieve all documents in the "records" sub-collection for this user
+      getDocs(recordsCollectionRef).then((recordsQuerySnapshot) => {
+        recordsQuerySnapshot.forEach((recordDoc) => {
+          // add the "amount" field to the sum
+
+          if (recordDoc.data().type == "articles") {
+            sumSoldArticles += recordDoc.data().amount;
+          }
+
+          if (recordDoc.data().type == "credit") {
+            sumCashInflow += recordDoc.data().amount;
+          }
+
+        });
+
+        console.log(`User ${userDoc.id} total amount articles: ${sumSoldArticles}, total amount input: ${sumCashInflow}`);
+      });
+    });
+  })
+
+
+
+
+
+
+
+}
+
 
 export {
   auth,
@@ -319,5 +368,6 @@ export {
   saveReport,
   addUserData,
   getAllUsersData,
-  getBoughtList
+  getBoughtList,
+  calcualteAllItemsSold
 };
