@@ -160,8 +160,17 @@
 #statistikacontainer {
   /* display: block;
   float: left; */
+
   width: 100%;
   height: 100%;
+
+}
+
+#pregledContainer {
+  width: 100%;
+  height: 100%;
+
+  padding-bottom: 20px;
 }
 
 .Auth-form-container {

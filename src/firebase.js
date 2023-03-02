@@ -302,61 +302,67 @@ const addUserData = async (name, nickname, ID, hiddenid) => {
 }
 
 const calcualteAllItemsSold = async () => {
-  console.log("Started Calculations")
   
   // get a reference to the "users" collection
-const usersCollectionRef = collection(db, 'users');
+  const usersCollectionRef = collection(db, 'users');
 
-var allData = []
+  const allData = [];
+  let totalCash = 0;
+  let totalBought = 0;
 
-var totalSumArticles = 0;
-var totalSumCash = 0;
+  var odpis = {"value": 0}
 
-// retrieve all documents in the "users" collection
-getDocs(usersCollectionRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((userDoc) => {
-      // get a reference to the "records" sub-collection for this user
-      const recordsCollectionRef = collection(userDoc.ref, 'records');
+  // retrieve all documents in the "users" collection
+  const querySnapshot = await getDocs(usersCollectionRef);
 
-      // create a query to filter the documents by user ID
-      // const userQuery = query(recordsCollectionRef, where('userId', '==', userDoc.id));
+  await Promise.all(querySnapshot.docs.map(async (userDoc) => {
+    // get a reference to the "records" sub-collection for this user
+    const recordsCollectionRef = collection(userDoc.ref, 'records');
 
-      // initialize sum to 0
-      let sumSoldArticles = 0;
-      let sumCashInflow = 0;
+    // initialize sum to 0
+    let sumSoldArticles = 0;
+    let sumCashInflow = 0;
 
+    // retrieve all documents in the "records" sub-collection for this user
+    const recordsQuerySnapshot = await getDocs(recordsCollectionRef);
 
-      // retrieve all documents in the "records" sub-collection for this user
-      getDocs(recordsCollectionRef).then((recordsQuerySnapshot) => {
-        recordsQuerySnapshot.forEach((recordDoc) => {
-          // add the "amount" field to the sum
+    recordsQuerySnapshot.forEach((recordDoc) => {
 
-          if (recordDoc.data().type == "articles") {
-            sumSoldArticles += recordDoc.data().amount;
-          }
-
-          if (recordDoc.data().type == "credit") {
-            sumCashInflow += recordDoc.data().amount;
-          }
-
-        });
-
-        totalSumArticles += sumSoldArticles;
-        totalSumCash += sumCashInflow;
-  
-        allData.push({"id": userDoc.id, "name": userDoc.name, "hiddenid": userDoc.hiddenid, "sumArticles": sumSoldArticles, "sumCash":  sumCashInflow})
-
-        console.log(`User ${userDoc.id} total amount articles: ${sumSoldArticles}, total amount input: ${sumCashInflow}`);
-      });
+      if (userDoc.id == "Odpis") {
+        odpis.value = odpis.value + recordDoc.data().amount
+        console.log("Odpis")
+      }
+   
+      // add the "amount" field to the sum
+      if (recordDoc.data().type == "articles") {
+        sumSoldArticles += recordDoc.data().amount;
+      }
+      if (recordDoc.data().type == "credit") {
+        sumCashInflow += recordDoc.data().amount;
+      }
     
-      // WORKS NEEDED HERE !!!!!!!!!!!!!!!!!!!!!!!!!
-
     });
-  })
 
 
-}
+    totalBought += sumSoldArticles
+    totalCash += sumCashInflow
+    
+    if (userDoc.id != "Odpis") {
+        allData.push({"id": userDoc.id, "name": userDoc.data().name, "hiddenid": userDoc.data().hiddenid, "sumArticles": sumSoldArticles, "sumCash":  sumCashInflow});
+    }
+    console.log(`User ${userDoc.id} total amount articles: ${sumSoldArticles}, total amount input: ${sumCashInflow}`);
+  }));
+
+  // allData.push({id:"everything", "totalBought": totalBought, "totalCash": totalCash, "surplus": totalCash - totalBought})
+  return [allData, totalBought, totalCash, totalCash - totalBought, odpis];
+};
+
+calcualteAllItemsSold().then((allData) => {
+  console.log(allData);
+}).catch((error) => {
+  console.error(error);
+});
+
 
 async function calculateBoughtSum() {
   // Define a function to calculate the sum of "amount" * "basePrice" for each document
@@ -371,6 +377,33 @@ async function calculateBoughtSum() {
     sum += data.amount * data.basePrice;
   });
   return sum;
+}
+
+async function getInventoryBasePriceSum() {
+  // Define a function that calculates the sum of all "basePrice" values in the "inventory" collection
+
+  try {
+    // Retrieve all documents from the "inventory" collection
+    const querySnapshot = await getDocs(collection(db, 'inventory'));
+
+    let sum = 0;
+    let sumSell = 0;
+
+    // Iterate over each document and add its "basePrice" value to the sum
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      console.log(data)
+      if (data.basePrice) {
+        sum += data.basePrice * data.amount;
+        sumSell += data.basePrice * data.amount + (1 + data.overHead/100)
+      }
+    });
+
+    // Return the final sum
+    return [sum, sumSell];
+  } catch (error) {
+    console.error('Error retrieving inventory:', error);
+  }
 }
 
 
@@ -394,5 +427,6 @@ export {
   getAllUsersData,
   getBoughtList,
   calcualteAllItemsSold,
-  calculateBoughtSum
+  calculateBoughtSum,
+  getInventoryBasePriceSum
 };

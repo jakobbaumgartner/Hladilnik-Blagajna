@@ -182,7 +182,7 @@ class App extends Component {
               <Nakup boughtSum={this.state.boughtSum} boughtList={this.state.boughtList} updateBoughtList={this.getItems} />
             </Tab>
             <Tab eventKey="Pregled" title="Pregled">
-              <Pregled />
+              <Pregled/>
             </Tab>
           </Tabs>
         </div>)
