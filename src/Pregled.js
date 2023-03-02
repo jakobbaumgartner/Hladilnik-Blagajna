@@ -89,9 +89,9 @@ export default class Pregled extends Component {
                     <td>{item.name}</td>
                     <td>{item.id}</td>
                     <td>{item.hiddenid}</td>
-                    <td>{item.sumArticles}</td>
-                    <td>{item.sumCash}</td>
-                    <td style={this.getRowStyle(item.sumCash - item.sumArticles)}>{item.sumCash - item.sumArticles}</td>
+                    <td>{parseFloat(item.sumArticles).toFixed(2)} €</td>
+                    <td>{parseFloat(item.sumCash).toFixed(2)} €</td>
+                    <td style={this.getRowStyle(item.sumCash - item.sumArticles)}>{parseFloat(item.sumCash - item.sumArticles).toFixed(2)} €</td>
                 </tr>
             ))
         }

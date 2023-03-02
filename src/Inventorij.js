@@ -262,17 +262,8 @@ export default class Inventorij extends Component {
 
                 {dialog}
 
-                <div id="displayMainButtons">
-
                     <Button id="addArticleButton" variant="success" size="lg" onClick={this.openDialogNew}> Dodaj Artikel </Button>
 
-
-                    <ListGroup horizontal id="counters">
-                        <ListGroup.Item><span title="Denar v blagajni."><h5>Blagajna</h5><br />{this.state.cash} €</span></ListGroup.Item>
-                        <ListGroup.Item><span title="Prodajna vrednost artiklov v blagajni."><h5>Artikli</h5><br />{parseFloat(vsotaArtiklov).toFixed(2)} €</span></ListGroup.Item>                        
-                        <ListGroup.Item><span title="Vsota = blagajna + artikli + dolg"><h5>Vsota</h5><br />{parseFloat(Number(this.state.cash) - vsotaArtiklov).toFixed(2) } €</span></ListGroup.Item>
-                    </ListGroup>
-                </div>
 
                 <div id="listOfArticles">
 
