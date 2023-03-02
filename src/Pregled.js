@@ -172,9 +172,9 @@ export default class Pregled extends Component {
                 <Table hover style={{ "marginTop": '20px', "marginBottom": '20px' }}>
                     <thead>
                         <tr>
-                            <th>Hidden ID</th>
-                            <th>ID</th>
                             <th>Ime</th>
+                            <th>ID</th>
+                            <th>Hidden ID</th>
                             <th>Kupljeno</th>
                             <th>Polnjeno</th>
                             <th>Stanje</th>
