@@ -11,6 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
+import Table from 'react-bootstrap/Table';
 import validator from 'validator';
 
 
@@ -31,19 +32,22 @@ export default class Nakup extends Component {
 
         var list = []
 
-        for (const [k, v] of Object.entries(this.props.boughtList)) {
+        console.log(this.props.boughtList)
 
-            console.log(v)
+        for (const [k, item] of Object.entries(this.props.boughtList)) {
 
-            list.push(<p text-align="left"	>IME: {v.name} -- KOLIČINA: {v.amount} -- CENA: {v.basePrice} € >>> VSOTA: {v.amount * v.basePrice} € -- DATUM: {v.date.toDate().getDate()} . {v.date.toDate().getMonth()+1} . {v.date.toDate().getFullYear()} </p>)
-
-            console.log(v.date.toDate().getMonth())
+            list.push(
+                <tr>
+                    <td>{item.name}</td>
+                    <td>{parseFloat(item.basePrice).toFixed(2)} €</td>
+                    <td>{parseFloat(item.amount).toFixed(2)}</td>
+                    <td>{parseFloat(item.amount * item.basePrice).toFixed(2)} €</td>
+                    <td>{item.date.toDate().getDate()} . {item.date.toDate().getMonth() + 1} . {item.date.toDate().getFullYear()}</td>
+                </tr>
+            )
 
         }
 
-
-
-        console.log('loaded nakup')
 
 
         return (
@@ -51,10 +55,25 @@ export default class Nakup extends Component {
             <div id="statistikacontainer">
 
                 <div id="statistikaDisplay">
-                    <h3>Skupaj kupljeno: {this.props.boughtSum} €</h3><br></br>
+                    <Table>
+                        <tr>
+                            <th>Skupaj: {this.props.boughtSum} €</th>
+                        </tr>
+                    </Table>
+                    <Table striped hover style={{ "marginTop": '20px', "marginBottom": '20px' }}>
+                        <thead>
+                            <tr>
+                                <th>Ime</th>
+                                <th>Cena</th>
+                                <th>Količina</th>
+                                <th>Skupaj</th>
+                                <th>Datum</th>
+                            </tr>
+                        </thead>
 
-                    {list}
-                    
+                        {list}
+                    </Table>
+
                 </div>
 
             </div>
