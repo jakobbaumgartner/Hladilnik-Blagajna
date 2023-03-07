@@ -198,20 +198,6 @@ export default class Mail extends Component {
                     </tbody>
                 </Table>
 
-                <Table hover style={{ "marginTop": '20px', "marginBottom": '20px' }}>
-
-                    <tbody>
-                        <tr>
-                            <th>Odpis</th>
-                            <td>{parseFloat(this.state.odpis).toFixed(2)} €</td>
-                        </tr>
-
-                    </tbody>
-                </Table>
-
-
-
-
             </div>
         )
 
