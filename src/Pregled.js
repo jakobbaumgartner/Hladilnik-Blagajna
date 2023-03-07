@@ -149,7 +149,7 @@ export default class Pregled extends Component {
                             <Card.Body>
                                 <Card.Title>Blagajna</Card.Title>
                                 <ListGroup variant="flush">
-                                    <ListGroup.Item>{parseFloat(90 - this.state.amountTotalBought + this.state.totalSold + this.state.surPlus).toFixed(2)} €</ListGroup.Item>
+                                    <ListGroup.Item>{parseFloat(50 - this.state.amountTotalBought + this.state.totalSold + this.state.surPlus).toFixed(2)} €</ListGroup.Item>
                                 </ListGroup>
                             </Card.Body>
                         </Card>
@@ -161,7 +161,7 @@ export default class Pregled extends Component {
                             <Card.Body>
                                 <Card.Title>Presežek</Card.Title>
                                 <ListGroup variant="flush">
-                                    <ListGroup.Item>{parseFloat(this.state.surPlus).toFixed(2)} €</ListGroup.Item>
+                                    <ListGroup.Item>{parseFloat(50 - this.state.amountTotalBought + this.state.totalSold).toFixed(2)} € €</ListGroup.Item>
                                 </ListGroup>
                             </Card.Body>
                         </Card>
