@@ -87,7 +87,6 @@ export default class Pregled extends Component {
             var tableData = this.state.allData.map((item) => (
                 <tr key={item.id} >
                     <td>{item.name}</td>
-                    <td>{item.id}</td>
                     <td>{item.hiddenid}</td>
                     <td>{parseFloat(item.sumArticles).toFixed(2)} €</td>
                     <td>{parseFloat(item.sumCash).toFixed(2)} €</td>
@@ -173,7 +172,6 @@ export default class Pregled extends Component {
                     <thead>
                         <tr>
                             <th>Ime</th>
-                            <th>ID</th>
                             <th>Hidden ID</th>
                             <th>Kupljeno</th>
                             <th>Polnjeno</th>

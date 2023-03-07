@@ -12,6 +12,7 @@ import { auth, logOut, getUsers, getRecords, getInventory, getBoughtList, addCas
 import Statistika from './Statistika';
 import Nakup from './Nakup';
 import Pregled from './Pregled'
+import Mail from './Mail';
 
 
 
@@ -183,6 +184,9 @@ class App extends Component {
             </Tab>
             <Tab eventKey="Pregled" title="Pregled">
               <Pregled/>
+            </Tab>
+            <Tab eventKey="Mail" title="Mail">
+              <Mail/>
             </Tab>
           </Tabs>
         </div>)

@@ -348,7 +348,7 @@ const calcualteAllItemsSold = async () => {
     totalCash += sumCashInflow
     
     if (userDoc.id != "Odpis") {
-        allData.push({"id": userDoc.id, "name": userDoc.data().name, "hiddenid": userDoc.data().hiddenid, "sumArticles": sumSoldArticles, "sumCash":  sumCashInflow});
+        allData.push({"id": userDoc.id, "name": userDoc.data().name, "hiddenid": userDoc.data().hiddenid, "sumArticles": sumSoldArticles, "sumCash":  sumCashInflow, "mail": userDoc.data().mail});
     }
     console.log(`User ${userDoc.id} total amount articles: ${sumSoldArticles}, total amount input: ${sumCashInflow}`);
   }));
