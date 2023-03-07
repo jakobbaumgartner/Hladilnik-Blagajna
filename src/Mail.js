@@ -17,6 +17,8 @@ import Table from 'react-bootstrap/Table';
 
 import AddReportComponent from './AddReportComponent';
 import HistoryReportsComponent from './HistoryReportsComponent.js'
+import DownloadButton from './DownloadButton';
+
 import validator from 'validator';
 import { getBoughtList, calcualteAllItemsSold, calculateBoughtSum, getRegisterData, getInventoryBasePriceSum } from './firebase';
 
@@ -177,10 +179,10 @@ export default class Mail extends Component {
                     </ButtonGroup>
 
                     <div className="ml-auto">
-                        <Button variant="success" onClick={this.sendEmailSMTPAndSendGrid}>Pošlji</Button>
+                        {/* <Button variant="success" onClick={this.sendEmailSMTPAndSendGrid}>Pošlji</Button> */}
+                        <DownloadButton allData={this.state.allData}/>
                     </div>
                 </div>
-
 
                 <Table hover style={{ "marginTop": '20px', "marginBottom": '20px' }}>
                     <thead>
