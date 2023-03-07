@@ -67,10 +67,10 @@ const getAllUsersData = async () => {
 
     allUsers[id] = dat
 
-});
+  });
 
 
-console.log(allUsers)
+  console.log(allUsers)
 
 }
 
@@ -294,7 +294,7 @@ const saveReport = async (username, newReport) => {
 const addUserData = async (name, nickname, ID, hiddenid) => {
 
   var postResponse = await setDoc(doc(db, "users", ID), {
-    name: name, 
+    name: name,
     nickname: nickname,
     hiddenid: hiddenid
   });
@@ -302,7 +302,7 @@ const addUserData = async (name, nickname, ID, hiddenid) => {
 }
 
 const calcualteAllItemsSold = async () => {
-  
+
   // get a reference to the "users" collection
   const usersCollectionRef = collection(db, 'users');
 
@@ -310,7 +310,7 @@ const calcualteAllItemsSold = async () => {
   let totalCash = 0;
   let totalBought = 0;
 
-  var odpis = {"value": 0}
+  var odpis = { "value": 0 }
 
   // retrieve all documents in the "users" collection
   const querySnapshot = await getDocs(usersCollectionRef);
@@ -332,23 +332,23 @@ const calcualteAllItemsSold = async () => {
         odpis.value = odpis.value + recordDoc.data().amount
         console.log("Odpis")
       }
-   
-      // add the "amount" field to the sum
-      if (recordDoc.data().type == "articles") {
-        sumSoldArticles += recordDoc.data().amount;
+      else {
+        // add the "amount" field to the sum
+        if (recordDoc.data().type == "articles") {
+          sumSoldArticles += recordDoc.data().amount;
+        }
+        if (recordDoc.data().type == "credit") {
+          sumCashInflow += recordDoc.data().amount;
+        }
       }
-      if (recordDoc.data().type == "credit") {
-        sumCashInflow += recordDoc.data().amount;
-      }
-    
     });
 
 
     totalBought += sumSoldArticles
     totalCash += sumCashInflow
-    
+
     if (userDoc.id != "Odpis") {
-        allData.push({"id": userDoc.id, "name": userDoc.data().name, "hiddenid": userDoc.data().hiddenid, "sumArticles": sumSoldArticles, "sumCash":  sumCashInflow, "mail": userDoc.data().mail});
+      allData.push({ "id": userDoc.id, "name": userDoc.data().name, "hiddenid": userDoc.data().hiddenid, "sumArticles": sumSoldArticles, "sumCash": sumCashInflow, "mail": userDoc.data().mail });
     }
     console.log(`User ${userDoc.id} total amount articles: ${sumSoldArticles}, total amount input: ${sumCashInflow}`);
   }));
@@ -395,7 +395,7 @@ async function getInventoryBasePriceSum() {
       console.log(data)
       if (data.basePrice) {
         sum += data.basePrice * data.amount;
-        sumSell += data.basePrice * data.amount + (1 + data.overHead/100)
+        sumSell += data.basePrice * data.amount + (1 + data.overHead / 100)
       }
     });
 
